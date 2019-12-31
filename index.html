@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>bodypart scale tool for Senran Kagura</title>
+		<script type="module">
+			let hex = string => parseInt(string, 0x10)
+			
+			let input = document.querySelector("#file")
+			let offsets = document.querySelector("#offsets")
+			
+			let data = document.querySelectorAll(`[data-offset]`)
+			
+			let buffer
+			let view
+			
+			let floatView = new DataView(new ArrayBuffer(4))
+			let setFloat = (offset, float) =>
+			{
+				floatView.setFloat32(0, float)
+				view.setUint8(offset + 0, floatView.getUint8(3))
+				view.setUint8(offset + 1, floatView.getUint8(2))
+				view.setUint8(offset + 2, floatView.getUint8(1))
+				view.setUint8(offset + 3, floatView.getUint8(0))
+			}
+			let getFloat = offset =>
+			{
+				floatView.setUint8(0, view.getUint8(offset + 3))
+				floatView.setUint8(1, view.getUint8(offset + 2))
+				floatView.setUint8(2, view.getUint8(offset + 1))
+				floatView.setUint8(3, view.getUint8(offset + 0))
+				return floatView.getFloat32(0)
+			}
+			
+			let filename
+			input.addEventListener("input", async () =>
+			{
+				let file = input.files[0]
+				if (!file) return
+				
+				filename = file.name
+				buffer = await file.arrayBuffer()
+				view = new DataView(buffer)
+			})
+			
+			for (let input of data)
+			{
+				input.addEventListener("input", () =>
+				{
+					for (let offset of offsets.querySelectorAll("option:checked"))
+						setFloat(hex(input.dataset.offset) + hex(offset.value), input.valueAsNumber)
+				})
+			}
+			
+			// Derived from this: https://stackoverflow.com/a/35708911
+			// Note that the problem is a little different, since we’re trying to find the double precision number whose shortest decimal representation round‐trips back to the given “single precision number” (represented as a double precision).
+			// Whereas the problem in the question is to find the shortest string that round‐trips.
+			// (Hopefully this makes sense and works, and there are no edge‐cases.)
+			let powers = [6, 7, 8, 9]
+			let round = float =>
+			{
+				for (let power of powers)
+				{
+					let scale = 10 ** power
+					
+					let rounded = Math.round(float * scale) / scale
+					floatView.setFloat32(0, rounded)
+					if (floatView.getFloat32(0) === float)
+						return rounded
+				}
+				// Should never get here. (Hopefully.)
+			}
+			
+			offsets.addEventListener("input", () =>
+			{
+				for (let input of data)
+				{
+					let [first, ...rest] = offsets.querySelectorAll("option:checked")
+					
+					if (!first)
+					{
+						input.value = ""
+						continue
+					}
+					
+					let ioffset = hex(input.dataset.offset)
+					let startOffset = ioffset + hex(first.value)
+					let value = view.getUint32(startOffset)
+					input.valueAsNumber = round(getFloat(startOffset))
+					for (let offset of rest)
+					{
+						if (view.getUint32(ioffset + hex(offset.value)) !== value)
+						{
+							input.value = ""
+							break
+						}
+					}
+				}
+			})
+			
+			document.querySelector("#download").addEventListener("click", () =>
+			{
+				let a = document.createElement("a")
+				document.body.append(a)
+				let url = URL.createObjectURL(new Blob([buffer]))
+				a.href = url
+				a.download = filename
+				a.click()
+				URL.revokeObjectURL(url)
+				a.remove()
+			})
+		</script>
+		<style>
+			main > div
+			{
+				display: grid;
+				grid-template: auto / auto auto;
+				grid-gap: 0 1em;
+				justify-content: start;
+				white-space: nowrap;
+			}
+			main > div > p { display: grid; }
+			main > div > div { text-align: right; }
+			
+			[data-offset] { width: 4em; }
+		</style>
+	</head>
+	<body>
+		<h1>bodypart scale tool for Senran Kagura</h1>
+		<p>
+			This webapplication facilitates modifying bodypart scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
+		</p>
+		<p>
+			To be able to use it, the first step is to select the body scaling file from your computer (oftentimes named <samp>plbodyscl.bin</samp>). After the file has been loaded, a character can be selected for modification in the list below. Note that multiple characters can be selected for batch modification by dragging on the list or using <kbd>ctrl‐click</kbd>.
+		</p>
+		<p>
+			Once editing is done, the modified file can be saved to the filesystem by activating the “download” button.
+		</p>
+		<h2>features and benefits</h2>
+		<ul>
+			<li>Plain standard HTML and JavaScript — Works on any modern browser.</li>
+			<li>Ease of use — The webapplication (I hope) is easy to use, and doesn’t require any in‐depth knowledge about computing.</li>
+			<li>Easy to hack — Made to be really simple to modify and adapt by developers. (If this doesn’t include a character you want, it’s simple to add them.)</li>
+			<li>Batch editing — Modify values of multiple characters at the same time by selecting multiple characters to modify.</li>
+			<li>Nondestructive — Only modifies the relevant part of  the file, leaves the rest intact. Performs modifications in memory, leaves the original file intact.</li>
+		</ul>
+		<main>
+			<h2>modifying bodypart scaling</h2>
+			<p>
+				<input type="file" id="file">
+			</p>
+			<div>
+				<p>
+					<select multiple id="offsets">
+						<optgroup label="Hanzo">
+							<option value="0044">Asuka</option>
+							<option value="01C4">Ikagura</option>
+							<option value="0344">Katsuragi</option>
+							<option value="04C4">Yagyu</option>
+							<option value="0644">Hibari</option>
+						</optgroup>
+						<optgroup label="Crimson Squad">
+							<option value="07C4">Homura</option>
+							<option value="0944">Yomi</option>
+							<option value="0AC4">Hikage</option>
+							<option value="0C44">Mirai</option>
+							<option value="0DC4">Haruka</option>
+						</optgroup>
+						<optgroup label="Gessen">
+							<option value="0F44">Yumi</option>
+							<option value="10C4">Murakumo</option>
+							<option value="1244">Yozakura</option>
+							<option value="13C4">Shiki</option>
+							<option value="1544">Minori</option>
+						</optgroup>
+						<optgroup label="Hebijo">
+							<option value="16C4">Miyabi</option>
+							<option value="1844">Murasaki</option>
+							<option value="19C4">Imu</option>
+							<option value="1B44">Ryoubi</option>
+							<option value="1CC4">Ryouna</option>
+						</optgroup>
+					</select>
+				</p>
+				<div>
+					<p>
+						hips_AS00:
+						<input type="number" step="any" min="0" data-offset="024">
+						<input type="number" step="any" min="0" data-offset="028">
+						<input type="number" step="any" min="0" data-offset="02C">
+					</p>
+					<p>
+						hips_AS01:
+						<input type="number" step="any" min="0" data-offset="03C">
+						<input type="number" step="any" min="0" data-offset="040">
+						<input type="number" step="any" min="0" data-offset="044">
+					</p>
+					<p>
+						lback:
+						<input type="number" step="any" min="0" data-offset="054">
+						<input type="number" step="any" min="0" data-offset="058">
+						<input type="number" step="any" min="0" data-offset="05C">
+					</p>
+					<p>
+						uback:
+						<input type="number" step="any" min="0" data-offset="06C">
+						<input type="number" step="any" min="0" data-offset="070">
+						<input type="number" step="any" min="0" data-offset="074">
+					</p>
+					<p>
+						thorax:
+						<input type="number" step="any" min="0" data-offset="084">
+						<input type="number" step="any" min="0" data-offset="088">
+						<input type="number" step="any" min="0" data-offset="08C">
+					</p>
+					<p>
+						neck:
+						<input type="number" step="any" min="0" data-offset="09C">
+						<input type="number" step="any" min="0" data-offset="0A0">
+						<input type="number" step="any" min="0" data-offset="0A4">
+					</p>
+					<p>
+						head:
+						<input type="number" step="any" min="0" data-offset="0B4">
+						<input type="number" step="any" min="0" data-offset="0B8">
+						<input type="number" step="any" min="0" data-offset="0BC">
+					</p>
+					<p>
+						bust_R00:
+						<input type="number" step="any" min="0" data-offset="0CC">
+						<input type="number" step="any" min="0" data-offset="0D0">
+						<input type="number" step="any" min="0" data-offset="0D4">
+					</p>
+					<p>
+						bust_L00:
+						<input type="number" step="any" min="0" data-offset="0E4">
+						<input type="number" step="any" min="0" data-offset="0E8">
+						<input type="number" step="any" min="0" data-offset="0EC">
+					</p>
+					<p>
+						elbow_R_AS00:
+						<input type="number" step="any" min="0" data-offset="0FC">
+						<input type="number" step="any" min="0" data-offset="100">
+						<input type="number" step="any" min="0" data-offset="104">
+					</p>
+					<p>
+						elbow_L_AS00:
+						<input type="number" step="any" min="0" data-offset="114">
+						<input type="number" step="any" min="0" data-offset="118">
+						<input type="number" step="any" min="0" data-offset="11C">
+					</p>
+					<p>
+						groin_R_AS00:
+						<input type="number" step="any" min="0" data-offset="12C">
+						<input type="number" step="any" min="0" data-offset="130">
+						<input type="number" step="any" min="0" data-offset="134">
+					</p>
+					<p>
+						groin_L_AS00:
+						<input type="number" step="any" min="0" data-offset="144">
+						<input type="number" step="any" min="0" data-offset="148">
+						<input type="number" step="any" min="0" data-offset="14C">
+					</p>
+					<p>
+						knee_R_AS00:
+						<input type="number" step="any" min="0" data-offset="15C">
+						<input type="number" step="any" min="0" data-offset="160">
+						<input type="number" step="any" min="0" data-offset="164">
+					</p>
+					<p>
+						knee_L_AS00:
+						<input type="number" step="any" min="0" data-offset="174">
+						<input type="number" step="any" min="0" data-offset="178">
+						<input type="number" step="any" min="0" data-offset="17C">
+					</p>
+					<p>
+						<button id="download">download</button>
+					</p>
+				</div>
+			</div>
+		</main>
+		<footer>
+			<small>Made by Zambonifofex</small>
+		</footer>
+	</body>
+</html>
