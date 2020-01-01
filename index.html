@@ -2,7 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>bodypart scale tool for Senran Kagura</title>
+		<title>body part scale tool for Senran Kagura</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<script type="module">
 			let hex = string => parseInt(string, 0x10)
 			
@@ -33,7 +34,7 @@
 			}
 			
 			let filename
-			input.addEventListener("input", async () =>
+			input.addEventListener("change", async () =>
 			{
 				let file = input.files[0]
 				if (!file) return
@@ -45,7 +46,10 @@
 			
 			for (let input of data)
 			{
-				input.addEventListener("input", () =>
+				input.type = "number"
+				input.step = "any"
+				input.min = "0"
+				input.addEventListener("change", () =>
 				{
 					for (let offset of offsets.querySelectorAll("option:checked"))
 						setFloat(hex(input.dataset.offset) + hex(offset.value), input.valueAsNumber)
@@ -109,29 +113,83 @@
 				URL.revokeObjectURL(url)
 				a.remove()
 			})
+			
+			for (let input of document.querySelectorAll("legend > input"))
+			{
+				input.type = "number"
+				input.step = "any"
+				input.min = "0"
+				let inputs = input.closest("fieldset").querySelectorAll(":not(legend) > input")
+				input.addEventListener("input", () =>
+				{
+					let value = input.valueAsNumber
+					if (value !== value) return
+					for (let other of inputs)
+						other.valueAsNumber = value
+				})
+				
+				input.addEventListener("change", () =>
+				{
+					for (let other of inputs)
+					for (let offset of offsets.querySelectorAll("option:checked"))
+						setFloat(hex(other.dataset.offset) + hex(offset.value), other.valueAsNumber)
+				})
+				
+				for (let other of inputs)
+				{
+					other.addEventListener("input", () => input.value = "")
+				}
+			}
 		</script>
 		<style>
+			body { color: #333; background: #FBFBFB; }
+			
 			main > div
 			{
 				display: grid;
 				grid-template: auto / auto auto;
-				grid-gap: 0 1em;
+				grid-gap: 0 16px;
 				justify-content: start;
 				white-space: nowrap;
 			}
+			
 			main > div > p { display: grid; }
-			main > div > div { text-align: right; }
+			main > div > div p { text-align: right; }
 			
 			[data-offset] { width: 4em; }
+			
+			fieldset
+			{
+				border: 1px solid #333;
+				border-radius: 8px;
+				margin: 0;
+				padding: 0 16px;
+			}
+			
+			main > div > div > div > p { margin-right: 17px; }
+			
+			main > div > div { display: grid; grid-gap: 8px 16px; }
+			
+			@media (min-width: 750px)
+			{
+				main > div > div
+				{
+					grid-template: auto / auto auto;
+				}
+			}
+			
+			legend > input { width: 8em; }
+			
+			input[type="file"] { width: 16em; }
 		</style>
 	</head>
 	<body>
-		<h1>bodypart scale tool for Senran Kagura</h1>
+		<h1>body part scale tool for Senran Kagura</h1>
 		<p>
-			This webapplication facilitates modifying bodypart scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
+			This webapplication facilitates modifying body part scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
 		</p>
 		<p>
-			To be able to use it, the first step is to select the body scaling file from your computer (oftentimes named <samp>plbodyscl.bin</samp>). After the file has been loaded, a character can be selected for modification in the list below. Note that multiple characters can be selected for batch modification by dragging on the list or using <kbd>ctrl‐click</kbd>.
+			To be able to use it, <strong>the first step is to select the body scaling file from your computer</strong> (oftentimes named <samp>plbodyscl.bin</samp>). After the file has been loaded, a character can be selected for modification in the list below. Note that multiple characters can be selected for batch modification by dragging on the list or using <kbd>ctrl‐click</kbd>.
 		</p>
 		<p>
 			Once editing is done, the modified file can be saved to the filesystem by activating the “download” button.
@@ -150,9 +208,10 @@
 		</p>
 		<p>Contributions and issues are welcome!</p>
 		<main>
-			<h2>modifying bodypart scaling</h2>
+			<h2>modifying body part scaling</h2>
 			<p>
-				<input type="file" id="file">
+				<label>Select your <samp>plbodyscl.bin</samp> file: <input type="file" id="file"></label>
+				<strong>This is important!</strong> (Read above.)
 			</p>
 			<div>
 				<p>
@@ -188,96 +247,116 @@
 					</select>
 				</p>
 				<div>
-					<p>
-						hips_AS00:
-						<input type="number" step="any" min="0" data-offset="024">
-						<input type="number" step="any" min="0" data-offset="028">
-						<input type="number" step="any" min="0" data-offset="02C">
-					</p>
-					<p>
-						hips_AS01:
-						<input type="number" step="any" min="0" data-offset="03C">
-						<input type="number" step="any" min="0" data-offset="040">
-						<input type="number" step="any" min="0" data-offset="044">
-					</p>
-					<p>
-						lback:
-						<input type="number" step="any" min="0" data-offset="054">
-						<input type="number" step="any" min="0" data-offset="058">
-						<input type="number" step="any" min="0" data-offset="05C">
-					</p>
-					<p>
-						uback:
-						<input type="number" step="any" min="0" data-offset="06C">
-						<input type="number" step="any" min="0" data-offset="070">
-						<input type="number" step="any" min="0" data-offset="074">
-					</p>
-					<p>
-						thorax:
-						<input type="number" step="any" min="0" data-offset="084">
-						<input type="number" step="any" min="0" data-offset="088">
-						<input type="number" step="any" min="0" data-offset="08C">
-					</p>
-					<p>
-						neck:
-						<input type="number" step="any" min="0" data-offset="09C">
-						<input type="number" step="any" min="0" data-offset="0A0">
-						<input type="number" step="any" min="0" data-offset="0A4">
-					</p>
-					<p>
-						head:
-						<input type="number" step="any" min="0" data-offset="0B4">
-						<input type="number" step="any" min="0" data-offset="0B8">
-						<input type="number" step="any" min="0" data-offset="0BC">
-					</p>
-					<p>
-						bust_R00:
-						<input type="number" step="any" min="0" data-offset="0CC">
-						<input type="number" step="any" min="0" data-offset="0D0">
-						<input type="number" step="any" min="0" data-offset="0D4">
-					</p>
-					<p>
-						bust_L00:
-						<input type="number" step="any" min="0" data-offset="0E4">
-						<input type="number" step="any" min="0" data-offset="0E8">
-						<input type="number" step="any" min="0" data-offset="0EC">
-					</p>
-					<p>
-						elbow_R_AS00:
-						<input type="number" step="any" min="0" data-offset="0FC">
-						<input type="number" step="any" min="0" data-offset="100">
-						<input type="number" step="any" min="0" data-offset="104">
-					</p>
-					<p>
-						elbow_L_AS00:
-						<input type="number" step="any" min="0" data-offset="114">
-						<input type="number" step="any" min="0" data-offset="118">
-						<input type="number" step="any" min="0" data-offset="11C">
-					</p>
-					<p>
-						groin_R_AS00:
-						<input type="number" step="any" min="0" data-offset="12C">
-						<input type="number" step="any" min="0" data-offset="130">
-						<input type="number" step="any" min="0" data-offset="134">
-					</p>
-					<p>
-						groin_L_AS00:
-						<input type="number" step="any" min="0" data-offset="144">
-						<input type="number" step="any" min="0" data-offset="148">
-						<input type="number" step="any" min="0" data-offset="14C">
-					</p>
-					<p>
-						knee_R_AS00:
-						<input type="number" step="any" min="0" data-offset="15C">
-						<input type="number" step="any" min="0" data-offset="160">
-						<input type="number" step="any" min="0" data-offset="164">
-					</p>
-					<p>
-						knee_L_AS00:
-						<input type="number" step="any" min="0" data-offset="174">
-						<input type="number" step="any" min="0" data-offset="178">
-						<input type="number" step="any" min="0" data-offset="17C">
-					</p>
+					<fieldset>
+						<legend>breasts <input></legend>
+						<p>
+							left:
+							<input data-offset="0E4">
+							<input data-offset="0E8">
+							<input data-offset="0EC">
+						</p>
+						<p>
+							right:
+							<input data-offset="0CC">
+							<input data-offset="0D0">
+							<input data-offset="0D4">
+						</p>
+					</fieldset>
+					<fieldset>
+						<legend>hips <input></legend>
+						<p>
+							AS00:
+							<input data-offset="024">
+							<input data-offset="028">
+							<input data-offset="02C">
+						</p>
+						<p>
+							AS01:
+							<input data-offset="03C">
+							<input data-offset="040">
+							<input data-offset="044">
+						</p>
+					</fieldset>
+					<div>
+						<p>
+							head:
+							<input data-offset="0B4">
+							<input data-offset="0B8">
+							<input data-offset="0BC">
+						</p>
+						<p>
+							thorax:
+							<input data-offset="084">
+							<input data-offset="088">
+							<input data-offset="08C">
+						</p>
+						<p>
+							neck:
+							<input data-offset="09C">
+							<input data-offset="0A0">
+							<input data-offset="0A4">
+						</p>
+					</div>
+					<fieldset>
+						<legend>back <input></legend>
+						<p>
+							lback:
+							<input data-offset="054">
+							<input data-offset="058">
+							<input data-offset="05C">
+						</p>
+						<p>
+							uback:
+							<input data-offset="06C">
+							<input data-offset="070">
+							<input data-offset="074">
+						</p>
+					</fieldset>
+					<fieldset>
+						<legend>elbow <input></legend>
+						<p>
+							left:
+							<input data-offset="114">
+							<input data-offset="118">
+							<input data-offset="11C">
+						</p>
+						<p>
+							right:
+							<input data-offset="0FC">
+							<input data-offset="100">
+							<input data-offset="104">
+						</p>
+					</fieldset>
+					<fieldset>
+						<legend>groin <input></legend>
+						<p>
+							left:
+							<input data-offset="144">
+							<input data-offset="148">
+							<input data-offset="14C">
+						</p>
+						<p>
+							right:
+							<input data-offset="12C">
+							<input data-offset="130">
+							<input data-offset="134">
+						</p>
+					</fieldset>
+					<fieldset>
+						<legend>knee <input></legend>
+						<p>
+							left:
+							<input data-offset="174">
+							<input data-offset="178">
+							<input data-offset="17C">
+						</p>
+						<p>
+							right:
+							<input data-offset="15C">
+							<input data-offset="160">
+							<input data-offset="164">
+						</p>
+					</fieldset>
 					<p>
 						<button id="download">download</button>
 					</p>
@@ -285,7 +364,7 @@
 			</div>
 		</main>
 		<footer>
-			<small>Made by Zambonifofex</small>
+			<small>made by Zambonifofex〜</small>
 		</footer>
 	</body>
 </html>
