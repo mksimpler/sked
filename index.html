@@ -75,18 +75,22 @@
 				// Should never get here. (Hopefully.)
 			}
 			
+			let compound = document.querySelectorAll("legend > input")
+			
 			offsets.addEventListener("input", () =>
 			{
+				for (let input of compound) input.value = ""
+				
+				let [first, ...rest] = offsets.querySelectorAll("option:checked")
+				
+				if (!first)
+				{
+					for (let input of data) input.value = ""
+					return
+				}
+				
 				for (let input of data)
 				{
-					let [first, ...rest] = offsets.querySelectorAll("option:checked")
-					
-					if (!first)
-					{
-						input.value = ""
-						continue
-					}
-					
 					let ioffset = hex(input.dataset.offset)
 					let startOffset = ioffset + hex(first.value)
 					let value = view.getUint32(startOffset)
@@ -114,7 +118,7 @@
 				a.remove()
 			})
 			
-			for (let input of document.querySelectorAll("legend > input"))
+			for (let input of compound)
 			{
 				input.type = "number"
 				input.step = "any"
