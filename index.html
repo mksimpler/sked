@@ -128,8 +128,7 @@
 				{
 					let value = input.valueAsNumber
 					if (value !== value) return
-					for (let other of inputs)
-						other.valueAsNumber = value
+					for (let other of inputs) other.valueAsNumber = value
 				})
 				
 				input.addEventListener("change", () =>
@@ -139,10 +138,7 @@
 						setFloat(hex(other.dataset.offset) + hex(offset.value), other.valueAsNumber)
 				})
 				
-				for (let other of inputs)
-				{
-					other.addEventListener("input", () => input.value = "")
-				}
+				for (let other of inputs) other.addEventListener("input", () => input.value = "")
 			}
 		</script>
 		<style>
