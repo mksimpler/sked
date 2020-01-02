@@ -1,7 +1,7 @@
-bodypart scale tool for Senran Kagura
+body part scale tool for Senran Kagura
 ===
 
-This webapplication facilitates modifying bodypart scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
+This webapplication facilitates modifying body part scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
 
 Note: There are intentionally few consistency checks performed. The belief is that ignoring raised errors is not problematic if the application can function well and behave as expected.
 
