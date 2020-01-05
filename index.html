@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>body part scale tool for Senran Kagura</title>
+		<title>body part scaling tool for Senran Kagura</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<script type="module">
 			let hex = string => parseInt(string, 0x10)
@@ -141,50 +141,10 @@
 				for (let other of inputs) other.addEventListener("input", () => input.value = "")
 			}
 		</script>
-		<style>
-			body { color: #333; background: #FBFBFB; }
-			
-			main > div
-			{
-				display: grid;
-				grid-template: auto / auto auto;
-				grid-gap: 0 16px;
-				justify-content: start;
-				white-space: nowrap;
-			}
-			
-			main > div > p { display: grid; }
-			main > div > div p { text-align: right; }
-			
-			[data-offset] { width: 4em; }
-			
-			fieldset
-			{
-				border: 1px solid #333;
-				border-radius: 8px;
-				margin: 0;
-				padding: 0 16px;
-			}
-			
-			main > div > div > div > p { margin-right: 17px; }
-			
-			main > div > div { display: grid; grid-gap: 8px 16px; }
-			
-			@media (min-width: 750px)
-			{
-				main > div > div
-				{
-					grid-template: auto / auto auto;
-				}
-			}
-			
-			legend > input { width: 8em; }
-			
-			#file { width: 16em; }
-		</style>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<h1>body part scale tool for Senran Kagura</h1>
+		<h1>body part scaling tool for Senran Kagura</h1>
 		<p>
 			This webapplication facilitates modifying body part scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
 		</p>
@@ -210,7 +170,7 @@
 		<main>
 			<h2>modifying body part scaling</h2>
 			<p>
-				<label>Select your <samp>plbodyscl.bin</samp> file: <input type="file" id="file"></label>
+				<label class="button" id="file-label">Select your <samp>plbodyscl.bin</samp> file <input type="file" id="file"></label>
 				<strong>This is important!</strong> (Read above.)
 			</p>
 			<div>
@@ -313,7 +273,7 @@
 						</p>
 					</fieldset>
 					<fieldset>
-						<legend>elbow <input></legend>
+						<legend>elbows <input></legend>
 						<p>
 							left:
 							<input data-offset="114">
@@ -343,7 +303,7 @@
 						</p>
 					</fieldset>
 					<fieldset>
-						<legend>knee <input></legend>
+						<legend>knees <input></legend>
 						<p>
 							left:
 							<input data-offset="174">
@@ -357,14 +317,12 @@
 							<input data-offset="164">
 						</p>
 					</fieldset>
-					<p>
-						<button id="download">download</button>
-					</p>
+					<p><button id="download">download</button></p>
 				</div>
 			</div>
 		</main>
 		<footer>
-			<small>made by Zambonifofex〜</small>
+			<p><small>made by Zambonifofex〜</small></p>
 		</footer>
 	</body>
 </html>

@@ -1,0 +1,169 @@
+@charset "utf-8";
+
+@import "https://fonts.googleapis.com/css?family=Hind";
+
+* { box-sizing: border-box; }
+
+body, input, select, button
+{
+	color: #000A;
+	font-family: "Hind", sans-serif;
+	font-size: 16px;
+}
+
+body
+{
+	margin: 4em auto;
+	width: min-content;
+	background: #F8F8F8;
+	padding: 0 4em;
+}
+
+main > div
+{
+	display: grid;
+	grid-template: auto / 9em auto;
+	grid-gap: 0 1em;
+	justify-content: start;
+	white-space: nowrap;
+}
+
+main > div > p { display: grid; }
+main > div > div p { text-align: right; }
+
+[data-offset] { width: 4em; }
+
+fieldset
+{
+	border: 0.0625em solid #0005;
+	border-radius: 1em;
+	margin: 0;
+	padding: 0 1em;
+}
+
+main > div > div > div > p { margin-right: 1.0625em; }
+
+main > div > div { display: grid; grid-gap: 0.5em 1em; }
+
+@media (min-width: 900px)
+{
+	main > div > div
+	{
+		grid-template: auto / 1fr 1fr;
+	}
+}
+
+legend > input { width: 8em; }
+
+#file { pointer-events: none; visibility: hidden; position: absolute; }
+
+input:not([type="file"]), select
+{
+	background: #FFF;
+	border-radius: 0.5em;
+	padding: 0.25em 0.5em;
+	box-shadow: inset #0002 0 0 0.75em;
+	border: 0.0625em solid #3333;
+	transition: 0.25s ease, 0.25s ease;
+	transition-property: background-color, box-shadow, border-color;
+	outline: none;
+}
+
+input:not(:focus) { cursor: pointer; }
+
+input:focus, select:focus { box-shadow: inset #BDF 0 0 0.75em; background: #FDFDFD; }
+input:hover, input:focus, select:focus { border-color: #BDF; }
+
+p { margin: 0.5em 0; }
+
+footer { text-align: center; }
+
+button, .button
+{
+	border: 0.25em solid #BDF;
+	background: #FFF;
+	padding: 0.5em 1em;
+	border-radius: 1em;
+	cursor: pointer;
+	transition: box-shadow 0.25s ease;
+	display: inline-block;
+}
+
+button:hover, .button:hover { box-shadow: #0003 0 0 1em; }
+
+legend { padding: 0em 0.5em; text-align: center; }
+
+a
+{
+	text-decoration: underline;
+	color: #27B;
+	text-decoration-color: transparent;
+	transition: text-decoration-color 0.25s ease;
+	outline: none;
+}
+
+a:focus { text-decoration-color: #27B; }
+
+#file-label { position: relative; }
+
+h1, h2 { font-weight: normal; margin: 0.5em 0; }
+
+h1 { font-weight: 1.5em; text-align: center; }
+h2 { font-weight: 1.25em; }
+
+ul, li { display: block; }
+ul { padding: 0; }
+li { margin: 0.5em 0; position: relative; }
+
+li::before
+{
+	content: "";
+	background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 4 4"><circle r="1.5" fill="%23000A" /></svg>');
+	width: 0.5em;
+	height: 0.5em;
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0.5em;
+	transform: translate(-100%) translate(-0.5em);
+}
+
+select
+{
+	text-align: center;
+	border-radius: 1em;
+	padding: 0;
+}
+
+option::before { content: none; }
+
+option { padding: 0; }
+
+optgroup { margin: 1em 0; }
+
+::-webkit-scrollbar
+{
+	background: none;
+	width: 0.75em;
+	height: 0.75em;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-corner
+{ background: none; }
+
+::-webkit-scrollbar-button { display: none; }
+
+::-webkit-scrollbar-thumb
+{
+	background: #0002;
+	border-radius: 1em;
+}
+
+select::-webkit-scrollbar { display: none; }
+
+::selection
+{
+	background: #BDF;
+}
