@@ -140,7 +140,9 @@ select
 
 option::before { content: none; }
 
-option { padding: 0; }
+option { padding: 0; cursor: pointer; }
+
+option:hover { background: #0000000A; }
 
 optgroup { margin: 1em 0; }
 
