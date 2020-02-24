@@ -170,10 +170,7 @@ optgroup::before { font-style: normal; font-weight: bold; }
 
 select::-webkit-scrollbar { display: none; }
 
-::selection
-{
-	background: #BDF;
-}
+::selection { background: #BDF; }
 
 canvas
 {
