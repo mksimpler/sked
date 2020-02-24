@@ -52,6 +52,7 @@ let resized = () =>
 	canvas.width = width
 	canvas.height = height
 	renderer.setSize(width, height)
+	canvas.removeAttribute("style")
 	camera.aspect = width / height
 	camera.updateProjectionMatrix()
 }
