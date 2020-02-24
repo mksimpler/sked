@@ -4,8 +4,8 @@
 		<meta charset="utf-8">
 		<title>body part scaling tool for Senran Kagura</title>
 		<meta name="viewport" content="width=device-width">
-		<link rel="stylesheet" href="style.css">
-		<script type="module" src="script.mjs"></script>
+		<link rel="stylesheet" href="/style.css">
+		<script type="module" src="/script.mjs"></script>
 	</head>
 	<body>
 		<h1>body part scaling tool for Senran Kagura</h1>
@@ -38,6 +38,11 @@
 				<label class="button" id="file-label" for="file">Select your <samp>plbodyscl.bin</samp> file</label>
 				<strong>This is important!</strong> (Read above.)
 			</p>
+			<details id="preview">
+				<summary><span class="button">3D preview</span> <small>(warning: may not work on some devices)</small></summary>
+				<p><canvas></canvas></p>
+				<p>Note: Currently, only breast scaling is reflected on the preview. Blank values are displayed at their default scales.</p>
+			</details>
 			<div>
 				<p>
 					<select multiple id="offsets">

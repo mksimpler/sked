@@ -57,7 +57,7 @@ legend > input { width: 8em; }
 
 #file { pointer-events: none; opacity: 0; position: absolute; }
 
-input:not([type="file"]), select
+input:not([type="file"]), select, canvas
 {
 	background: #FFF;
 	border-radius: 0.5em;
@@ -74,7 +74,7 @@ input:not(:focus) { cursor: pointer; }
 input:focus, select:focus { box-shadow: inset #BDF 0 0 0.75em; background: #FDFDFD; }
 input:hover, input:focus, select:focus { border-color: #BDF; }
 
-p { margin: 0.5em 0; }
+p, details { margin: 0.5em 0; }
 
 footer { text-align: center; }
 
@@ -173,4 +173,12 @@ select::-webkit-scrollbar { display: none; }
 ::selection
 {
 	background: #BDF;
+}
+
+canvas
+{
+	padding: 0;
+	width: 100%;
+	height: 24em;
+	display: block;
 }

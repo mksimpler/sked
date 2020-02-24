@@ -3,7 +3,7 @@ let hex = string => parseInt(string, 0x10)
 let input = document.querySelector("#file")
 let offsets = document.querySelector("#offsets")
 
-let data = document.querySelectorAll(`[data-offset]`)
+let data = document.querySelectorAll("[data-offset]")
 
 let buffer
 let view
@@ -133,3 +133,13 @@ for (let input of compound)
 	
 	for (let other of inputs) other.addEventListener("input", () => input.value = "")
 }
+
+let preview
+
+let details = document.querySelector("#preview")
+details.addEventListener("toggle", async () =>
+{
+	if (!preview) preview = await import("./preview.mjs")
+	if (details.open) preview.enable()
+	else preview.disable()
+})
