@@ -5,3 +5,4 @@
 !.nowignore
 !now.json
 !style.css
+!script.mjs
