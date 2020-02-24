@@ -1,9 +1,9 @@
 let hex = string => parseInt(string, 0x10)
 
 let input = document.querySelector("#file")
-let offsets = document.querySelector("#offsets")
 
-let data = document.querySelectorAll("[data-offset]")
+let characters = document.querySelector("#characters")
+let scales = document.querySelectorAll("[data-offset]")
 
 let buffer
 let view
@@ -37,15 +37,15 @@ input.addEventListener("change", async () =>
 	view = new DataView(buffer)
 })
 
-for (let input of data)
+for (let input of scales)
 {
 	input.type = "number"
 	input.step = "any"
 	input.min = "0"
 	input.addEventListener("change", () =>
 	{
-		for (let offset of offsets.querySelectorAll("option:checked"))
-			setFloat(hex(input.dataset.offset) + hex(offset.value), input.valueAsNumber)
+		for (let option of characters.querySelectorAll("option:checked"))
+			setFloat(hex(input.dataset.offset) + hex(option.value), input.valueAsNumber)
 	})
 }
 
@@ -70,32 +70,22 @@ let round = float =>
 
 let compound = document.querySelectorAll("legend > input")
 
-offsets.addEventListener("input", () =>
+characters.addEventListener("input", () =>
 {
 	for (let input of compound) input.value = ""
+	for (let input of scales) input.value = ""
 	
-	let [first, ...rest] = offsets.querySelectorAll("option:checked")
+	let offsets = [...characters.querySelectorAll("option:checked")].map(option => hex(option.value))
 	
-	if (!first)
+	if (offsets.length === 0) return
+	
+	for (let input of scales)
 	{
-		for (let input of data) input.value = ""
-		return
-	}
-	
-	for (let input of data)
-	{
-		let ioffset = hex(input.dataset.offset)
-		let startOffset = ioffset + hex(first.value)
-		let value = view.getUint32(startOffset)
-		input.valueAsNumber = round(getFloat(startOffset))
-		for (let offset of rest)
-		{
-			if (view.getUint32(ioffset + hex(offset.value)) !== value)
-			{
-				input.value = ""
-				break
-			}
-		}
+		let partOffset = hex(input.dataset.offset)
+		
+		let [first, ...values] = offsets.map(characterOffset => view.getUint32(partOffset + characterOffset))
+		if (values.every(value => value === first))
+			input.valueAsNumber = round(getFloat(partOffset + offsets[0]))
 	}
 })
 
@@ -121,17 +111,17 @@ for (let input of compound)
 	{
 		let value = input.valueAsNumber
 		if (value !== value) return
-		for (let other of inputs) other.valueAsNumber = value
+		for (let subInput of inputs) subInput.valueAsNumber = value
 	})
 	
 	input.addEventListener("change", () =>
 	{
-		for (let other of inputs)
-		for (let offset of offsets.querySelectorAll("option:checked"))
-			setFloat(hex(other.dataset.offset) + hex(offset.value), other.valueAsNumber)
+		for (let subInput of inputs)
+		for (let option of characters.querySelectorAll("option:checked"))
+			setFloat(hex(subInput.dataset.offset) + hex(option.value), subInput.valueAsNumber)
 	})
 	
-	for (let other of inputs) other.addEventListener("input", () => input.value = "")
+	for (let subInput of inputs) subInput.addEventListener("input", () => input.value = "")
 }
 
 let preview

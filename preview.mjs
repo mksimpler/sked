@@ -70,6 +70,8 @@ let correspondences =
 	"Right Chest": ["0CC", "0D0", "0D4"],
 }
 
+let characters = document.querySelector("#characters")
+
 let loaded = () =>
 {
 	for (let name in correspondences)
@@ -87,7 +89,9 @@ let loaded = () =>
 		for (let i = 0 ; i < 3 ; i++)
 		{
 			let input = document.querySelector(`[data-offset="${offsets[i]}"]`)
+			update(i, input.valueAsNumber)
 			input.addEventListener("input", () => update(i, input.valueAsNumber))
+			characters.addEventListener("input", () => update(i, input.valueAsNumber))
 		}
 		
 		let fieldset = document.querySelector(`[data-offset="${offsets[0]}"]`).closest("fieldset")
