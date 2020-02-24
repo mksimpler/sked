@@ -8,3 +8,5 @@
 !script.mjs
 !preview.mjs
 !package.json
+!model
+!model/*
