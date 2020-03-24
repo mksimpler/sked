@@ -47,6 +47,13 @@ for (let input of scales)
 		for (let option of characters.querySelectorAll("option:checked"))
 			setFloat(hex(input.dataset.offset) + hex(option.value), input.valueAsNumber)
 	})
+	
+	let fieldset = input.closest("fieldset")
+	if (fieldset)
+	{
+		let compound = fieldset.querySelector("legend > input")
+		input.addEventListener("dblclick", () => { if (!input.classList.toggle("free")) compound.value = "" })
+	}
 }
 
 // Derived from this: https://stackoverflow.com/a/35708911
@@ -111,14 +118,15 @@ for (let input of compound)
 	{
 		let value = input.valueAsNumber
 		if (value !== value) return
-		for (let subInput of inputs) subInput.valueAsNumber = value
+		for (let subInput of inputs)
+			if (!subInput.matches(".free")) subInput.valueAsNumber = value
 	})
 	
 	input.addEventListener("change", () =>
 	{
 		for (let subInput of inputs)
 		for (let option of characters.querySelectorAll("option:checked"))
-			setFloat(hex(subInput.dataset.offset) + hex(option.value), subInput.valueAsNumber)
+			if (!subInput.matches(".free")) setFloat(hex(subInput.dataset.offset) + hex(option.value), subInput.valueAsNumber)
 	})
 	
 	for (let subInput of inputs) subInput.addEventListener("input", () => input.value = "")

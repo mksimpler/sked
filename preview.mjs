@@ -68,6 +68,9 @@ let correspondences =
 {
 	"Left Chest": ["0E4", "0E8", "0EC"],
 	"Right Chest": ["0CC", "0D0", "0D4"],
+	"Left Leg Twist": ["144", "148", "14C"],
+	"Right Leg Twist": ["12C", "130", "134"],
+	"Hips": ["03C", "040", "044"],
 }
 
 let characters = document.querySelector("#characters")
@@ -92,17 +95,11 @@ let loaded = () =>
 			update(i, input.valueAsNumber)
 			input.addEventListener("input", () => update(i, input.valueAsNumber))
 			characters.addEventListener("input", () => update(i, input.valueAsNumber))
-		}
-		
-		let fieldset = document.querySelector(`[data-offset="${offsets[0]}"]`).closest("fieldset")
-		if (fieldset)
-		{
-			let input = fieldset.querySelector("legend > input")
-			input.addEventListener("input", () =>
-			{
-				for (let i = 0 ; i < 3 ; i++)
-					update(i, input.valueAsNumber)
-			})
+			
+			let fieldset = input.closest("fieldset")
+			if (!fieldset) continue
+			let compound = fieldset.querySelector("legend > input")
+			compound.addEventListener("input", () => { if(!input.matches(".free")) update(i, compound.valueAsNumber) })
 		}
 	}
 }

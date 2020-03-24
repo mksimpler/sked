@@ -194,3 +194,8 @@ canvas
 
 #preview > summary::-webkit-details-marker
 { display: none; }
+
+input.free
+{
+	background: repeating-linear-gradient(90deg, #FFF 0, #FFF 0.4375em, #3333 0.4375em, #3333 0.5em);
+}

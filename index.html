@@ -41,7 +41,7 @@
 			<details id="preview">
 				<summary><span class="button">3D preview</span> <small>(warning: Might not work on some devices.)</small></summary>
 				<p><canvas></canvas></p>
-				<p>Note: Currently, only breast scaling is reflected on the preview. Blank values are displayed at their default scales.</p>
+				<p>Note: Currently, only the scaling of breasts, hips, and thighs as reflected on the preview. Blank values are displayed at their default scales.</p>
 				<p>Model ripped by <a href="https://deviantart.com/skeegie">Skeegie</a> and rendered using <a href="https://threejs.org">three.js</a>.</p>
 			</details>
 			<div>
@@ -94,21 +94,38 @@
 						</p>
 					</fieldset>
 					<fieldset>
-						<legend>hips <input></legend>
+						<legend>thighs <input></legend>
 						<p>
-							AS00:
-							<input data-offset="024">
-							<input data-offset="028">
-							<input data-offset="02C">
+							left:
+							<input data-offset="144">
+							<input data-offset="148" class="free">
+							<input data-offset="14C">
 						</p>
 						<p>
-							AS01:
-							<input data-offset="03C">
-							<input data-offset="040">
-							<input data-offset="044">
+							right:
+							<input data-offset="12C">
+							<input data-offset="130" class="free">
+							<input data-offset="134">
 						</p>
 					</fieldset>
 					<div>
+						<fieldset>
+							<legend>hips <input></legend>
+							<p>
+								<input data-offset="03C">
+								<input data-offset="040">
+								<input data-offset="044">
+							</p>
+						</fieldset>
+						<p>
+							thorax:
+							<input data-offset="084">
+							<input data-offset="088">
+							<input data-offset="08C">
+						</p>
+					</div>
+					<fieldset>
+						<legend>head <input></legend>
 						<p>
 							head:
 							<input data-offset="0B4">
@@ -116,31 +133,25 @@
 							<input data-offset="0BC">
 						</p>
 						<p>
-							thorax:
-							<input data-offset="084">
-							<input data-offset="088">
-							<input data-offset="08C">
-						</p>
-						<p>
 							neck:
 							<input data-offset="09C">
 							<input data-offset="0A0">
 							<input data-offset="0A4">
 						</p>
-					</div>
+					</fieldset>
 					<fieldset>
 						<legend>back <input></legend>
 						<p>
-							lback:
-							<input data-offset="054">
-							<input data-offset="058">
-							<input data-offset="05C">
-						</p>
-						<p>
-							uback:
+							upper:
 							<input data-offset="06C">
 							<input data-offset="070">
 							<input data-offset="074">
+						</p>
+						<p>
+							lower:
+							<input data-offset="054">
+							<input data-offset="058">
+							<input data-offset="05C">
 						</p>
 					</fieldset>
 					<fieldset>
@@ -156,21 +167,6 @@
 							<input data-offset="0FC">
 							<input data-offset="100">
 							<input data-offset="104">
-						</p>
-					</fieldset>
-					<fieldset>
-						<legend>groin <input></legend>
-						<p>
-							left:
-							<input data-offset="144">
-							<input data-offset="148">
-							<input data-offset="14C">
-						</p>
-						<p>
-							right:
-							<input data-offset="12C">
-							<input data-offset="130">
-							<input data-offset="134">
 						</p>
 					</fieldset>
 					<fieldset>
