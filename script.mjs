@@ -224,9 +224,15 @@ for (let input of compound)
 		if (!subInput.matches(".free"))
 		{
 			if (average.checked)
-				subInput.valueAsNumber *= value / previous
+			{
+				let current = subInput.valueAsNumber
+				if (current === current)
+					subInput.valueAsNumber = value / previous * current
+			}
 			else
+			{
 				subInput.valueAsNumber = value
+			}
 		}
 		
 		previous = value
