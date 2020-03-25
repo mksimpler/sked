@@ -251,9 +251,9 @@ for (let input of compound)
 				setFloat(offset, value / initial * getFloat(offset))
 			else
 				setFloat(offset, value)
-			
-			initial = value
 		}
+		
+		initial = value
 	})
 	
 	for (let subInput of inputs)
