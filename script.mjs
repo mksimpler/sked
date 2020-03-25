@@ -66,11 +66,7 @@ for (let input of scales)
 	})
 	
 	let fieldset = input.closest("fieldset")
-	if (fieldset)
-	{
-		let compound = fieldset.querySelector("legend > input")
-		input.addEventListener("dblclick", () => { if (!input.classList.toggle("free")) compound.value = "" })
-	}
+	if (fieldset) input.addEventListener("dblclick", () => input.classList.toggle("free"))
 }
 
 // Derived from this: https://stackoverflow.com/a/35708911
@@ -98,7 +94,6 @@ let compound = document.querySelectorAll("legend > input")
 
 characters.addEventListener("input", () =>
 {
-	for (let input of compound) input.value = ""
 	for (let input of scales) input.value = ""
 	
 	let offsets = [...characters.querySelectorAll("option:checked")].map(option => hex(option.value))
@@ -127,29 +122,140 @@ document.querySelector("#download").addEventListener("click", () =>
 	a.remove()
 })
 
+let i = 0
+
 for (let input of compound)
 {
+	i++
+	
 	input.type = "number"
 	input.step = "any"
 	input.min = "0"
 	input.step = "0.05"
+	
+	let average = document.createElement("input")
+	average.type = "checkbox"
+	average.id = "c" + i
+	average.title = "average mode"
+	
+	let label = document.createElement("label")
+	label.textContent = "="
+	label.htmlFor = "c" + i
+	label.classList.add("button")
+	label.title = "toggle mode"
+	
+	input.after(" ", average, label)
+	
+	let initial
+	let previous
+	
+	let update = () =>
+	{
+		if (average.checked)
+		{
+			let total = 0
+			let count = 0
+			
+			for (let subInput of inputs)
+			if (!subInput.matches(".free"))
+			for (let option of characters.querySelectorAll("option:checked"))
+			{
+				count++
+				total += getFloat(hex(subInput.dataset.offset) + hex(option.value))
+			}
+			
+			initial = total / count
+			if (initial === initial) input.valueAsNumber = round(initial)
+			else input.value = ""
+			previous = initial
+		}
+		else
+		{
+			let i = inputs.length - 1
+			while (i >= 0)
+			{
+				if (!inputs[i].matches(".free")) break
+				i--
+			}
+			
+			let value = inputs[i].valueAsNumber
+			i--
+			while (i >= 0)
+			{
+				let j = i
+				i--
+				if (inputs[j].matches(".free")) continue
+				if (inputs[j].valueAsNumber !== value) break
+			}
+			if (i < 0) input.valueAsNumber = value
+			else input.value = ""
+		}
+	}
+	
+	average.addEventListener("click", () =>
+	{
+		if (average.checked)
+		{
+			label.textContent = "÷"
+			input.min = "0.1"
+		}
+		else
+		{
+			label.textContent = "="
+			input.min = "0"
+		}
+		update()
+	})
+	
 	let inputs = input.closest("fieldset").querySelectorAll(":not(legend) > input")
+	
 	input.addEventListener("input", () =>
 	{
 		let value = input.valueAsNumber
 		if (value !== value) return
+		
+		if (average.checked && value < 0.1)
+		{
+			value = 0.1
+			input.valueAsNumber = value
+		}
+		
 		for (let subInput of inputs)
-			if (!subInput.matches(".free")) subInput.valueAsNumber = value
+		if (!subInput.matches(".free"))
+		{
+			if (average.checked)
+				subInput.valueAsNumber *= value / previous
+			else
+				subInput.valueAsNumber = value
+		}
+		
+		previous = value
 	})
 	
 	input.addEventListener("change", () =>
 	{
+		let value = input.valueAsNumber
+		
 		for (let subInput of inputs)
+		if (!subInput.matches(".free"))
 		for (let option of characters.querySelectorAll("option:checked"))
-			if (!subInput.matches(".free")) setFloat(hex(subInput.dataset.offset) + hex(option.value), subInput.valueAsNumber)
+		{
+			let offset = hex(subInput.dataset.offset) + hex(option.value)
+			if (average.checked)
+				setFloat(offset, value / initial * getFloat(offset))
+			else
+				setFloat(offset, value)
+			
+			initial = value
+		}
 	})
 	
-	for (let subInput of inputs) subInput.addEventListener("input", () => input.value = "")
+	for (let subInput of inputs)
+	{
+		subInput.addEventListener("input", update)
+		subInput.addEventListener("dblclick", update)
+	}
+	characters.addEventListener("input", update)
 }
 
 let preview
