@@ -80,13 +80,15 @@ for (let input of scales)
 let powers = [6, 7, 8, 9]
 let round = float =>
 {
+	floatView.setFloat32(0, float)
+	let short = floatView.getFloat32(0)
 	for (let power of powers)
 	{
 		let scale = 10 ** power
 		
 		let rounded = Math.round(float * scale) / scale
 		floatView.setFloat32(0, rounded)
-		if (floatView.getFloat32(0) === float)
+		if (floatView.getFloat32(0) === short)
 			return rounded
 	}
 	// Should never get here. (Hopefully.)
