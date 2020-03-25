@@ -14,7 +14,9 @@ body, input, select, button
 body
 {
 	margin: 4em auto;
-	width: min-content;
+	width: 32em;
+	min-width: 75%;
+	max-width: 100%;
 	background: #F8F8F8;
 	padding: 0 4em;
 }
@@ -45,7 +47,7 @@ main > div > div > div > p { margin-right: 1.0625em; }
 
 main > div > div { display: grid; grid-gap: 0.5em 1em; }
 
-@media (min-width: 900px)
+@media (min-width: 1200px)
 {
 	main > div > div
 	{
@@ -53,9 +55,23 @@ main > div > div { display: grid; grid-gap: 0.5em 1em; }
 	}
 }
 
+@media (max-width: 800px)
+{
+	main > div
+	{
+		grid-template: auto auto / auto;
+	}
+	
+	body
+	{
+		padding: 0 2em;
+		margin: 2em auto;
+	}
+}
+
 legend > input { width: 8em; }
 
-#file { pointer-events: none; opacity: 0; position: absolute; }
+#file { pointer-events: none; opacity: 0; position: absolute; width: 0; }
 
 input:not([type="file"]), select, canvas
 {
@@ -74,7 +90,7 @@ input:not(:focus) { cursor: pointer; }
 input:focus, select:focus { box-shadow: inset #BDF 0 0 0.75em; background: #FDFDFD; }
 input:hover, input:focus, select:focus { border-color: #BDF; }
 
-p, details { margin: 0.5em 0; }
+p { margin: 0.5em 0; }
 
 footer { text-align: center; }
 
@@ -195,7 +211,15 @@ canvas
 #preview > summary::-webkit-details-marker
 { display: none; }
 
+#preview
+{
+	grid-column: 1 / -1;
+	white-space: normal;
+}
+
 input.free
 {
-	background: repeating-linear-gradient(90deg, #FFF 0, #FFF 0.4375em, #3333 0.4375em, #3333 0.5em);
+	background: padding-box -0.03125em repeating-linear-gradient(90deg, #FFF 0, #FFF 0.4375em, #3332 0.4375em, #3332 0.5em);
 }
+
+[hidden] { display: none !important; }

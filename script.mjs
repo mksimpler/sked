@@ -26,22 +26,39 @@ let getFloat = offset =>
 	return floatView.getFloat32(0)
 }
 
-let filename
+let load = document.querySelector("#load")
+let main = document.querySelector("main > div")
+
 input.addEventListener("change", async () =>
 {
 	let file = input.files[0]
 	if (!file) return
 	
-	filename = file.name
+	load.hidden = true
 	buffer = await file.arrayBuffer()
 	view = new DataView(buffer)
+	input.value = ""
+	main.hidden = false
 })
+
+for (let button of document.querySelectorAll("[data-preset]"))
+{
+	let url = button.dataset.preset
+	button.addEventListener("click", async () =>
+	{
+		load.hidden = true
+		buffer = await (await fetch(url)).arrayBuffer()
+		view = new DataView(buffer)
+		main.hidden = false
+	})
+}
 
 for (let input of scales)
 {
 	input.type = "number"
 	input.step = "any"
 	input.min = "0"
+	input.step = "0.05"
 	input.addEventListener("change", () =>
 	{
 		for (let option of characters.querySelectorAll("option:checked"))
@@ -102,7 +119,7 @@ document.querySelector("#download").addEventListener("click", () =>
 	document.body.append(a)
 	let url = URL.createObjectURL(new Blob([buffer]))
 	a.href = url
-	a.download = filename
+	a.download = "plbodyscl.bin"
 	a.click()
 	URL.revokeObjectURL(url)
 	a.remove()
@@ -113,6 +130,7 @@ for (let input of compound)
 	input.type = "number"
 	input.step = "any"
 	input.min = "0"
+	input.step = "0.05"
 	let inputs = input.closest("fieldset").querySelectorAll(":not(legend) > input")
 	input.addEventListener("input", () =>
 	{
