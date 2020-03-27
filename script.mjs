@@ -59,14 +59,82 @@ for (let input of scales)
 	input.step = "any"
 	input.min = "0"
 	input.step = "0.05"
-	input.addEventListener("change", () =>
+	input.title = ""
+	
+	let average
+	
+	let initial
+	let previous
+	
+	let update = () =>
 	{
+		if (average.checked)
+		{
+			let total = 0
+			
+			let options = characters.querySelectorAll("option:checked")
+			for (let option of options)
+				total += getFloat(hex(input.dataset.offset) + hex(option.value))
+			
+			initial = total / options.length
+			if (initial === initial) input.valueAsNumber = round(initial)
+			else input.value = ""
+			previous = initial
+		}
+		else
+		{
+			let offset = hex(input.dataset.offset)
+			
+			let options = characters.querySelectorAll("option:checked")
+			
+			let value = view.getUint32(offset + hex(options[options.length - 1].value))
+			
+			let i = options.length - 2
+			
+			while (i >= 0)
+			{
+				if (value !== view.getUint32(offset + hex(options[i].value))) break
+				i--
+			}
+			if (i < 0) input.valueAsNumber = round(getFloat(offset + hex(options[options.length - 1].value)))
+			else input.value = ""
+		}
+	}
+	
+	characters.addEventListener("input", update)
+	
+	input.addEventListener("input", () =>
+	{
+		let value = input.valueAsNumber
+		
+		let axisOffset = hex(input.dataset.offset)
+		
 		for (let option of characters.querySelectorAll("option:checked"))
-			setFloat(hex(input.dataset.offset) + hex(option.value), input.valueAsNumber)
+		{
+			let offset = axisOffset + hex(option.value)
+			if (average.checked)
+				setFloat(offset, value / initial * getFloat(offset))
+			else
+				setFloat(offset, value)
+		}
+		
+		initial = value
 	})
 	
 	let fieldset = input.closest("fieldset")
-	if (fieldset) input.addEventListener("dblclick", () => input.classList.toggle("free"))
+	if (fieldset)
+	{
+		input.addEventListener("dblclick", () => input.classList.toggle("free"))
+		setTimeout(() =>
+		{
+			average = fieldset.querySelector(`legend > input[type="checkbox"]`)
+			average.addEventListener("change", update)
+		})
+	}
+	else
+	{
+		average = {checked: false}
+	}
 }
 
 // Derived from this: https://stackoverflow.com/a/35708911
@@ -92,24 +160,6 @@ let round = float =>
 
 let compound = document.querySelectorAll("legend > input")
 
-characters.addEventListener("input", () =>
-{
-	for (let input of scales) input.value = ""
-	
-	let offsets = [...characters.querySelectorAll("option:checked")].map(option => hex(option.value))
-	
-	if (offsets.length === 0) return
-	
-	for (let input of scales)
-	{
-		let partOffset = hex(input.dataset.offset)
-		
-		let [first, ...values] = offsets.map(characterOffset => view.getUint32(partOffset + characterOffset))
-		if (values.every(value => value === first))
-			input.valueAsNumber = round(getFloat(partOffset + offsets[0]))
-	}
-})
-
 document.querySelector("#download").addEventListener("click", () =>
 {
 	let a = document.createElement("a")
@@ -132,6 +182,7 @@ for (let input of compound)
 	input.step = "any"
 	input.min = "0"
 	input.step = "0.05"
+	input.title = ""
 	
 	let average = document.createElement("input")
 	average.type = "checkbox"
@@ -179,15 +230,13 @@ for (let input of compound)
 			}
 			
 			let value = inputs[i].valueAsNumber
-			i--
-			while (i >= 0)
+			while (i > 0)
 			{
-				let j = i
 				i--
-				if (inputs[j].matches(".free")) continue
-				if (inputs[j].valueAsNumber !== value) break
+				if (inputs[i].matches(".free")) continue
+				if (inputs[i].valueAsNumber !== value) break
 			}
-			if (i < 0) input.valueAsNumber = value
+			if (i <= 0) input.valueAsNumber = value
 			else input.value = ""
 		}
 	}
