@@ -29,6 +29,8 @@ let getFloat = offset =>
 let load = document.querySelector("#load")
 let main = document.querySelector("main > div")
 
+let start = []
+
 input.addEventListener("change", async () =>
 {
 	let file = input.files[0]
@@ -39,6 +41,7 @@ input.addEventListener("change", async () =>
 	view = new DataView(buffer)
 	input.value = ""
 	main.hidden = false
+	for (let f of start) f()
 })
 
 for (let button of document.querySelectorAll("[data-preset]"))
@@ -50,7 +53,59 @@ for (let button of document.querySelectorAll("[data-preset]"))
 		buffer = await (await fetch(url)).arrayBuffer()
 		view = new DataView(buffer)
 		main.hidden = false
+		for (let f of start) f()
 	})
+}
+
+let getOffsets = inputs =>
+{
+	let optionOffsets = [...characters.querySelectorAll("option:checked")].map(option => hex(option.value))
+	let inputOffsets = inputs.map(input => hex(input.dataset.offset))
+	
+	return inputOffsets.flatMap(offset1 => optionOffsets.map(offset2 => offset1 + offset2))
+}
+
+let updateInput = (input, inputs, average, setCurrent) =>
+{
+	let offsets = getOffsets(inputs)
+	
+	input.disabled = !offsets.length
+	
+	if (input.disabled)
+	{
+		input.value = ""
+		return
+	}
+	
+	if (average)
+	{
+		let value = offsets.map(offset => getFloat(offset)).reduce((a, b) => a + b, 0) / offsets.length
+		if (value === value) input.valueAsNumber = round(value)
+		else input.value = ""
+		input.disabled = value < 0.05
+		setCurrent(value)
+	}
+	else
+	{
+		let value = view.getUint32(offsets[0])
+		for (let offset of offsets)
+		{
+			if (value !== view.getUint32(offset))
+			{
+				input.value = ""
+				return
+			}
+		}
+		input.valueAsNumber = round(getFloat(offsets[0]))
+	}
+}
+
+let updateFile = (input, inputs, average, initial) =>
+{
+	let value = input.valueAsNumber
+	let offsets = getOffsets(inputs)
+	if (average) for (let offset of offsets) setFloat(offset, value / initial * getFloat(offset))
+	else for (let offset of offsets) setFloat(offset, value)
 }
 
 for (let input of scales)
@@ -64,61 +119,17 @@ for (let input of scales)
 	let average
 	
 	let initial
-	let previous
 	
-	let update = () =>
-	{
-		if (average.checked)
-		{
-			let total = 0
-			
-			let options = characters.querySelectorAll("option:checked")
-			for (let option of options)
-				total += getFloat(hex(input.dataset.offset) + hex(option.value))
-			
-			initial = total / options.length
-			if (initial === initial) input.valueAsNumber = round(initial)
-			else input.value = ""
-			previous = initial
-		}
-		else
-		{
-			let offset = hex(input.dataset.offset)
-			
-			let options = characters.querySelectorAll("option:checked")
-			
-			let value = view.getUint32(offset + hex(options[options.length - 1].value))
-			
-			let i = options.length - 2
-			
-			while (i >= 0)
-			{
-				if (value !== view.getUint32(offset + hex(options[i].value))) break
-				i--
-			}
-			if (i < 0) input.valueAsNumber = round(getFloat(offset + hex(options[options.length - 1].value)))
-			else input.value = ""
-		}
-	}
+	let update = () => updateInput(input, [input], average.checked, value => initial = value)
+	let reflect = () => { updateFile(input, [input], average.checked, initial) ; initial = input.valueAsNumber }
+	start.push(update)
 	
 	characters.addEventListener("input", update)
 	
 	input.addEventListener("input", () =>
 	{
-		let value = input.valueAsNumber
-		
-		let axisOffset = hex(input.dataset.offset)
-		
-		for (let option of characters.querySelectorAll("option:checked"))
-		{
-			let offset = axisOffset + hex(option.value)
-			if (average.checked)
-				setFloat(offset, value / initial * getFloat(offset))
-			else
-				setFloat(offset, value)
-		}
-		
-		initial = value
+		if (average.checked && input.valueAsNumber < 0.05) input.valueAsNumber = 0.05
+		reflect()
 	})
 	
 	let fieldset = input.closest("fieldset")
@@ -197,49 +208,14 @@ for (let input of compound)
 	
 	input.after(" ", average, label)
 	
+	let inputs = [...input.closest("fieldset").querySelectorAll(":not(legend) > input")]
+	
 	let initial
 	let previous
 	
-	let update = () =>
-	{
-		if (average.checked)
-		{
-			let total = 0
-			let count = 0
-			
-			for (let subInput of inputs)
-			if (!subInput.matches(".free"))
-			for (let option of characters.querySelectorAll("option:checked"))
-			{
-				count++
-				total += getFloat(hex(subInput.dataset.offset) + hex(option.value))
-			}
-			
-			initial = total / count
-			if (initial === initial) input.valueAsNumber = round(initial)
-			else input.value = ""
-			previous = initial
-		}
-		else
-		{
-			let i = inputs.length - 1
-			while (i >= 0)
-			{
-				if (!inputs[i].matches(".free")) break
-				i--
-			}
-			
-			let value = inputs[i].valueAsNumber
-			while (i > 0)
-			{
-				i--
-				if (inputs[i].matches(".free")) continue
-				if (inputs[i].valueAsNumber !== value) break
-			}
-			if (i <= 0) input.valueAsNumber = value
-			else input.value = ""
-		}
-	}
+	let update = () => updateInput(input, inputs.filter(input => !input.matches(".free")), average.checked, value => initial = previous = value)
+	let reflect = () => { updateFile(input, inputs.filter(input => !input.matches(".free")), average.checked, initial) ; initial = previous = input.valueAsNumber}
+	start.push(update)
 	
 	average.addEventListener("click", () =>
 	{
@@ -256,18 +232,11 @@ for (let input of compound)
 		update()
 	})
 	
-	let inputs = input.closest("fieldset").querySelectorAll(":not(legend) > input")
-	
 	input.addEventListener("input", () =>
 	{
 		let value = input.valueAsNumber
-		if (value !== value) return
 		
-		if (average.checked && value < 0.1)
-		{
-			value = 0.1
-			input.valueAsNumber = value
-		}
+		if (average.checked && value < 0.05) value = input.valueAsNumber = 0.05
 		
 		for (let subInput of inputs)
 		if (!subInput.matches(".free"))
@@ -276,34 +245,18 @@ for (let input of compound)
 			{
 				let current = subInput.valueAsNumber
 				if (current === current)
-					subInput.valueAsNumber = value / previous * current
+					subInput.valueAsNumber = round(value / previous * current)
 			}
 			else
 			{
-				subInput.valueAsNumber = value
+				subInput.valueAsNumber = round(value)
 			}
 		}
 		
 		previous = value
 	})
 	
-	input.addEventListener("change", () =>
-	{
-		let value = input.valueAsNumber
-		
-		for (let subInput of inputs)
-		if (!subInput.matches(".free"))
-		for (let option of characters.querySelectorAll("option:checked"))
-		{
-			let offset = hex(subInput.dataset.offset) + hex(option.value)
-			if (average.checked)
-				setFloat(offset, value / initial * getFloat(offset))
-			else
-				setFloat(offset, value)
-		}
-		
-		initial = value
-	})
+	input.addEventListener("change", reflect)
 	
 	for (let subInput of inputs)
 	{

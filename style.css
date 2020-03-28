@@ -228,3 +228,10 @@ input.free
 }
 
 [hidden] { display: none !important; }
+
+input:not([type="file"]):disabled
+{
+	background: #1111;
+	box-shadow: none;
+	pointer-events: none;
+}
