@@ -111,7 +111,6 @@ let updateFile = (input, inputs, average, initial) =>
 for (let input of scales)
 {
 	input.type = "number"
-	input.step = "any"
 	input.min = "0"
 	input.step = "0.05"
 	input.title = ""
@@ -190,7 +189,6 @@ for (let input of compound)
 	i++
 	
 	input.type = "number"
-	input.step = "any"
 	input.min = "0"
 	input.step = "0.05"
 	input.title = ""
