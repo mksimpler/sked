@@ -136,8 +136,8 @@ a:focus { text-decoration-color: #27B; }
 
 h1, h2 { font-weight: normal; margin: 0.5em 0; }
 
-h1 { font-weight: 1.5em; text-align: center; }
-h2 { font-weight: 1.25em; }
+h1 { font-size: 2em; text-align: center; }
+h2 { font-size: 1.5em; }
 
 ul, li { display: block; }
 ul { padding: 0; margin: 0; }
