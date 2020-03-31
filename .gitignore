@@ -12,3 +12,4 @@
 !model/*
 !presets
 !presets/*
+!build.bash

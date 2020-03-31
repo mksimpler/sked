@@ -3,6 +3,6 @@
 		"three": "0.115.0"
 	},
 	"scripts": {
-		"build": "mkdir -p public && cp -r node_modules index.html style.css script.mjs preview.mjs model presets public"
+		"build": "./build.bash"
 	}
 }
