@@ -1,4 +1,4 @@
-body part scale tool for Senran Kagura
+sked
 ===
 
 This Web application facilitates modifying body part scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.
