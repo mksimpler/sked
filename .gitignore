@@ -13,3 +13,6 @@
 !presets
 !presets/*
 !build.bash
+!tutorial.html
+!tutorial
+!tutorial/index.html

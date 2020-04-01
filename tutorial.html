@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>sked tutorial</title>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="/style.css">
+		<script type="module">
+			import {setBuffer} from "/script.mjs"
+			
+			for (let button of document.querySelectorAll(`legend:not(.keep-mode-toggle) > input[type="checkbox"], legend:not(.keep-mode-toggle) > label`))
+				button.hidden = true
+			
+			let buffer = new ArrayBuffer(0x12C)
+			let view = new Int32Array(buffer)
+			
+			view.fill(0x3F800000)
+			
+			for (let different of [0x0F, 0x10, 0x11, 0x12, 0x13, 0x14])
+				view[different] = 0x3F666666
+			
+			for (let different of [0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41])
+				view[different] = 0x3F4CCCCD
+			
+			setBuffer(buffer)
+			
+			window.view = view
+		</script>
+		<style>
+			fieldset
+			{
+				width: max-content;
+			}
+			
+			option
+			{
+				padding: 0 2em;
+			}
+			
+			.example
+			{
+				padding: 0 0.5em;
+				pointer-events: none;
+				margin: -1em 0;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>how to use <a href="/">sked</a></h1>
+		<h2>backstory</h2>
+		<p>Senran Kagura is a series of games of varying styles, mostly known for its <em>hack ’n’ slash / beat ’em up</em> games, which is the style of game from which the series originated.</p>
+		<p>The vast cast is constituted mainly of girls, with only a few supporting male characters.</p>
+		<p>In most of the games, the only playable characters are girls, with varying body types and looks. In order to customize the body types of the characters, the games use a body part scaling file. This file contains information about the sizes of various body parts to customize the look of the different characters.</p>
+		<p>Conveniently, a lot of the games have a similar file format for customizing body scales for the different characters. This similarity, alongside the flexibility of the format, allows for tools to exist that allow users to uniformly change the body types of the various character across the games. sked is one of such tools.</p>
+		<h2>about this tutorial</h2>
+		<p>This is an interactive guide on how to use sked and employ its various features effectively. As you read the tutorial, there will be interactive examples that you can use to explore how the tool works and behaves.</p>
+		<h2>the basics</h2>
+		<p>The aforementioned file that the games use allow for the customization of a variety of individual body parts, some of which come in pairs. A good example being <em>left breast</em> and <em>right breast</em>, which are considered individual body parts by the games.</p>
+		<p>Oftentimes, the user will want to modify the values of related body parts at once. It can become tedious to edit them individually, so sked groups them to allow for them to be modified at the same time.</p>
+		<fieldset>
+			<legend>breasts <input></legend>
+			<p>
+				left:
+				<input data-offset="00">
+				<input data-offset="04">
+				<input data-offset="08">
+			</p>
+			<p>
+				right:
+				<input data-offset="0C">
+				<input data-offset="10">
+				<input data-offset="14">
+			</p>
+		</fieldset>
+		<p>Each individual body part has three fields: an “x” field, a “y” field, and a “z” field, for scaling along each of those axes.</p>
+		<p>The field at the top is called the <em>compound field</em>. By default, modifying it will change the value of each regular field in its group, and if the values in the group are modified to be different, the compound field will show be shown as blank to indicate the inconsistency.</p>
+		<h2>selecting characters</h2>
+		<p>When using sked, after selecting a file or choosing a preset, the first thing that needs to be done is selecting characters to modify.</p>
+		<p>The user will sometimes want to modify multiple characters to be similar or even the same altogether. This is easy in sked, as they can simply select multiple characters from the list. Desktop browsers oftentimes allow this by dragging the mouse on the list, or by holding <kbd>ctrl</kbd> while clicking the items on the list.</p>
+		<select multiple id="characters">
+			<optgroup label="Hanzo">
+				<option value="00" selected>Asuka</option>
+				<option value="3C">Ikagura</option>
+				<option value="78">Katsuragi</option>
+				<option value="B4">Yagyu</option>
+				<option value="F0">Hibari</option>
+			</optgroup>
+		</select>
+		<p>When multiple characters are selected, by default, if there is a value that is different across characters, its field will become blank, just as compound fields do.</p>
+		<p>Also analogously to compound fields, by default, changing a regular field when multiple characters are selected will affect all of the selected characters.</p>
+		<h2>regular field modes</h2>
+		<p>Regular fields have two operation modes: <em>unbound mode</em> (or <em>free mode</em>) and <em>bound mode</em>. To toggle between these two modes on desktop, a user can simply double‐click the regular field whose mode they want to change. Unbound fields have vertical stripes to indicate their mode — the “y” fields of the “thighs” group are in unbound mode by default.</p>
+		<p>A field in unbound mode does not affect its group’s compund field, it’s treated entirely as if it didn’t partake in the group.</p>
+		<fieldset>
+			<legend>thighs <input></legend>
+			<p>
+				left:
+				<input data-offset="18">
+				<input data-offset="1C" class="free">
+				<input data-offset="20">
+			</p>
+			<p>
+				right:
+				<input data-offset="24">
+				<input data-offset="28" class="free">
+				<input data-offset="2C">
+			</p>
+		</fieldset>
+		<h2>field group modes</h2>
+		<p>Groups themselves also have two different working modes, albeit entirely orthogonal to the modes of regular fields.</p>
+		<p>To toggle among <em>assignment mode</em> (represented by <span class="button example">=</span>) and <em>average mode</em> (represented by <span class="button example">÷</span>), the user can click on the button to the right of the compund field of a group.</p>
+		<p>Assignment mode is the default mode for each group, and its behavior has been explained until this point with “by default”.</p>
+		<p>In average mode, no field will ever be blank. If there is some inconsistency among the values it represents, it’ll show the <em>average</em> of their values.</p>
+		<p>By itself, this is not noteworthily useful; the advantage is when modifying the field’s value.</p>
+		<p>Whereas with assignment mode, modifying a field will <em>replace</em> all its values, in average mode, modifying a field will <em>change</em> them proportionally.</p>
+		<p>Note that group modes affect both regular and compound fields alike. Note also, however, that they only differ in behavior for regular fields when there are multiple characters selected.</p>
+		<p>Average is useful if someone wants to, e.g. change a specific body part of mutliple (perhaps all) characters, while keeping them proportional to each other.</p>
+		<p>Another use of average mode is modifying all values in a group while keeping an specific axis proportionally lower or higher than the rest.</p>
+		<fieldset>
+			<legend class="keep-mode-toggle">hips <input></legend>
+			<p>
+				<input data-offset="30">
+				<input data-offset="34">
+				<input data-offset="38">
+			</p>
+		</fieldset>
+		<p>
+			Note: For the interactive example above, try selecting multiple characters on one of the previous examples.
+		</p>
+	</body>
+</html>

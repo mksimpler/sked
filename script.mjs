@@ -8,6 +8,13 @@ let scales = document.querySelectorAll("[data-offset]")
 let buffer
 let view
 
+export let setBuffer = value =>
+{
+	buffer = value
+	view = new DataView(buffer)
+	for (let f of start) f()
+}
+
 let floatView = new DataView(new ArrayBuffer(4))
 let setFloat = (offset, float) =>
 {
@@ -31,18 +38,17 @@ let main = document.querySelector("main > div")
 
 let start = []
 
-input.addEventListener("change", async () =>
-{
-	let file = input.files[0]
-	if (!file) return
-	
-	load.hidden = true
-	buffer = await file.arrayBuffer()
-	view = new DataView(buffer)
-	input.value = ""
-	main.hidden = false
-	for (let f of start) f()
-})
+if (input)
+	input.addEventListener("change", async () =>
+	{
+		let file = input.files[0]
+		if (!file) return
+		
+		load.hidden = true
+		setBuffer(await file.arrayBuffer())
+		input.value = ""
+		main.hidden = false
+	})
 
 for (let button of document.querySelectorAll("[data-preset]"))
 {
@@ -50,10 +56,8 @@ for (let button of document.querySelectorAll("[data-preset]"))
 	button.addEventListener("click", async () =>
 	{
 		load.hidden = true
-		buffer = await (await fetch(url)).arrayBuffer()
-		view = new DataView(buffer)
+		setBuffer(await (await fetch(url)).arrayBuffer())
 		main.hidden = false
-		for (let f of start) f()
 	})
 }
 
@@ -108,6 +112,8 @@ let updateFile = (input, inputs, average, initial) =>
 	else for (let offset of offsets) setFloat(offset, value)
 }
 
+let later = []
+
 for (let input of scales)
 {
 	input.type = "number"
@@ -135,7 +141,7 @@ for (let input of scales)
 	if (fieldset)
 	{
 		input.addEventListener("dblclick", () => input.classList.toggle("free"))
-		setTimeout(() =>
+		later.push(() =>
 		{
 			average = fieldset.querySelector(`legend > input[type="checkbox"]`)
 			average.addEventListener("change", update)
@@ -170,17 +176,19 @@ let round = float =>
 
 let compound = document.querySelectorAll("legend > input")
 
-document.querySelector("#download").addEventListener("click", () =>
-{
-	let a = document.createElement("a")
-	document.body.append(a)
-	let url = URL.createObjectURL(new Blob([buffer]))
-	a.href = url
-	a.download = "plbodyscl.bin"
-	a.click()
-	URL.revokeObjectURL(url)
-	a.remove()
-})
+let download = document.querySelector("#download")
+if (download)
+	download.addEventListener("click", () =>
+	{
+		let a = document.createElement("a")
+		document.body.append(a)
+		let url = URL.createObjectURL(new Blob([buffer]))
+		a.href = url
+		a.download = "plbodyscl.bin"
+		a.click()
+		URL.revokeObjectURL(url)
+		a.remove()
+	})
 
 let i = 0
 
@@ -247,7 +255,8 @@ for (let input of compound)
 			}
 			else
 			{
-				subInput.valueAsNumber = round(value)
+				if (value === value) subInput.valueAsNumber = round(value)
+				else subInput.value = ""
 			}
 		}
 		
@@ -264,12 +273,15 @@ for (let input of compound)
 	characters.addEventListener("input", update)
 }
 
+for (let f of later) f()
+
 let preview
 
 let details = document.querySelector("#preview")
-details.addEventListener("toggle", async () =>
-{
-	if (!preview) preview = await import("./preview.mjs")
-	if (details.open) preview.enable()
-	else preview.disable()
-})
+if (details)
+	details.addEventListener("toggle", async () =>
+	{
+		if (!preview) preview = await import("./preview.mjs")
+		if (details.open) preview.enable()
+		else preview.disable()
+	})

@@ -12,4 +12,5 @@ mv \
 	preview.mjs \
 	model \
 	presets \
+	tutorial.html \
 	public

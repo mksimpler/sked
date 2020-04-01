@@ -31,7 +31,7 @@ main > div
 }
 
 main > div > p { display: grid; }
-main > div > div p { text-align: right; }
+fieldset p { text-align: right; }
 
 [data-offset] { width: 4em; }
 
@@ -116,7 +116,7 @@ button:focus,
 #preview > summary:hover .button
 { box-shadow: #0003 0 0 1em; }
 
-legend > .button { padding: 0.0625em 0.5em; }
+legend > .button { padding: 0 0.5em; }
 legend > .button:hover { box-shadow: #0003 0 0 0.5em; }
 
 legend { padding: 0em 0.5em; text-align: center; }
