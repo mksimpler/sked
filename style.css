@@ -31,7 +31,7 @@ main > div
 }
 
 main > div > p { display: grid; }
-fieldset p { text-align: right; }
+main > div > div p, fieldset p { text-align: right; }
 
 [data-offset] { width: 4em; }
 
