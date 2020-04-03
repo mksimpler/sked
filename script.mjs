@@ -277,10 +277,13 @@ for (let f of later) f()
 
 let preview
 
+let canvas = document.querySelector("#canvas")
 let details = document.querySelector("#preview")
 if (details)
 	details.addEventListener("toggle", async () =>
 	{
+		document.body.classList.toggle("preview", details.open)
+		canvas.hidden = !details.open
 		if (!preview) preview = await import("./preview.mjs")
 		if (details.open) preview.enable()
 		else preview.disable()

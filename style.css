@@ -13,25 +13,26 @@ body, input, select, button
 
 body
 {
-	margin: 4em auto;
+	margin: 2em auto;
 	width: 32em;
 	min-width: 75%;
 	max-width: 100%;
 	background: #F8F8F8;
-	padding: 0 4em;
+	padding: 0 2em;
 }
 
 main > div
 {
 	display: grid;
-	grid-template: auto / 9em auto;
+	grid-template: auto auto / auto;
 	grid-gap: 0 1em;
-	justify-content: start;
+	justify-items: start;
 	white-space: nowrap;
 }
 
 main > div > p { display: grid; }
 main > div > div p, fieldset p { text-align: right; }
+#canvas { justify-self: stretch; }
 
 [data-offset] { width: 4em; }
 
@@ -55,17 +56,70 @@ main > div > div { display: grid; grid-gap: 0.5em 1em; }
 	}
 }
 
-@media (max-width: 800px)
+@media (min-width: 800px) and (orientation: landscape)
 {
 	main > div
 	{
-		grid-template: auto auto / auto;
+		grid-template: auto / 9em auto;
 	}
 	
 	body
 	{
-		padding: 0 2em;
-		margin: 2em auto;
+		padding: 0 4em;
+		margin: 4em auto;
+	}
+	
+	main > div > p
+	{
+		max-height: calc(100vh - 4em);
+		position: sticky;
+		top: 2em;
+	}
+	
+	body.preview
+	{
+		margin-left: 0;
+		margin-right: 0;
+		width: auto;
+	}
+	
+	body.preview main > div
+	{
+		grid-template: auto / 9em auto 1fr;
+	}
+	
+	body.preview #canvas { grid-column: -2 / -1; }
+	body.preview main > div > p,
+	body.preview main > div > div
+	{ grid-row: 2 / 3; }
+	
+	body.preview canvas { height: 100%; }
+}
+
+@media (orientation: portrait)
+{
+	body.preview #canvas
+	{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		margin: 0;
+	}
+	
+	body.preview canvas
+	{
+		border-radius: 0;
+		border-style: solid none none none;
+	}
+	
+	body.preview canvas, body.preview::after
+	{
+		content: "";
+		display: block;
+		height: 16em;
+		max-height: 50vh;
 	}
 }
 
@@ -165,7 +219,7 @@ select
 
 option::before { content: none; }
 
-option { padding: 0; cursor: pointer; }
+option { padding: 0 2em; cursor: pointer; }
 
 option:hover { background: #0000000A; }
 
