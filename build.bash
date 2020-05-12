@@ -5,7 +5,6 @@ set -e
 mkdir -p public
 
 mv \
-	node_modules \
 	index.html \
 	style.css \
 	script.mjs \
@@ -14,3 +13,5 @@ mv \
 	presets \
 	tutorial.html \
 	public
+
+mv node_modules public/modules

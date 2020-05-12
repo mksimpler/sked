@@ -8,11 +8,11 @@ import
 	LoadingManager,
 	AmbientLight,
 }
-from "./node_modules/three/build/three.module.js"
+from "./modules/three/build/three.module.js"
 
-import {OrbitControls} from "./node_modules/three/examples/jsm/controls/OrbitControls.js"
-import {MMDLoader} from "./node_modules/three/examples/jsm/loaders/MMDLoader.js"
-import {DDSLoader} from "./node_modules/three/examples/jsm/loaders/DDSLoader.js"
+import {OrbitControls} from "./modules/three/examples/jsm/controls/OrbitControls.js"
+import {MMDLoader} from "./modules/three/examples/jsm/loaders/MMDLoader.js"
+import {DDSLoader} from "./modules/three/examples/jsm/loaders/DDSLoader.js"
 
 let manager = new LoadingManager()
 manager.addHandler(/\.dds$/, new DDSLoader())
