@@ -178,7 +178,9 @@ button:focus,
 { box-shadow: #0003 0 0 1em; }
 
 legend > .button { padding: 0 0.5em; }
-legend > .button:hover { box-shadow: #0003 0 0 0.5em; }
+legend > .button:hover,
+input[type="checkbox"]:focus + label.button
+{ box-shadow: #0003 0 0 0.5em; }
 
 legend { padding: 0em 0.5em; text-align: center; }
 
@@ -285,7 +287,7 @@ canvas
 
 input.free
 {
-	background: padding-box -0.03125em repeating-linear-gradient(90deg, #FFF 0, #FFF 0.4375em, #3332 0.4375em, #3332 0.5em);
+	background: padding-box -0.03125em repeating-linear-gradient(90deg, #FFF 0, #FFF 0.4375em, #3335 0.4375em, #3335 0.5em);
 }
 
 [hidden] { display: none !important; }
