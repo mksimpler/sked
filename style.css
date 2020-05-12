@@ -144,6 +144,13 @@ input:not(:focus) { cursor: pointer; }
 input:focus, select:focus { box-shadow: inset #BDF 0 0 0.75em; background: #FDFDFD; }
 input:hover, input:focus, select:focus { border-color: #BDF; }
 
+legend:focus-within ~ p > input:not(.free):not([disabled])
+{
+	box-shadow: inset #BDF 0 0 0.75em;
+	background: #FDFDFD;
+	border-color: #BDF;
+}
+
 p { margin: 0.5em 0; }
 
 footer { text-align: center; }
