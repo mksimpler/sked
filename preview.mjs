@@ -99,7 +99,7 @@ let loaded = () =>
 			let fieldset = input.closest("fieldset")
 			if (!fieldset) continue
 			let compound = fieldset.querySelector("legend > input")
-			compound.addEventListener("input", () => { if(!input.matches(".free")) update(i, compound.valueAsNumber) })
+			compound.addEventListener("input", () => update(i, input.valueAsNumber))
 		}
 	}
 }
