@@ -114,6 +114,8 @@ let updateFile = (input, inputs, average, initial) =>
 
 let later = []
 
+let modeChangeListenerMap = new Map()
+
 for (let input of scales)
 {
 	input.type = "number"
@@ -140,7 +142,37 @@ for (let input of scales)
 	let fieldset = input.closest("fieldset")
 	if (fieldset)
 	{
-		input.addEventListener("dblclick", () => input.classList.toggle("free"))
+		let listeners = []
+		modeChangeListenerMap.set(input, listeners)
+		
+		let toggleMode = () =>
+		{
+			input.classList.toggle("free")
+			for (let listener of listeners) listener()
+		}
+		
+		let lastTap = NaN
+		let t = -1
+		input.addEventListener("pointerdown", () => t = setTimeout(toggleMode, 500))
+		input.addEventListener("pointerup", () =>
+		{
+			clearTimeout(t)
+			
+			let now = performance.now()
+			if (lastTap > now - 500) toggleMode()
+			else lastTap = now
+		})
+		
+		input.addEventListener("keyup", event =>
+		{
+			let {code, ctrlKey} = event
+			if (code === "Space" && ctrlKey)
+			{
+				toggleMode()
+				event.preventDefault()
+			}
+		})
+		
 		later.push(() =>
 		{
 			average = fieldset.querySelector(`legend > input[type="checkbox"]`)
@@ -166,7 +198,7 @@ let round = float =>
 	{
 		let scale = 10 ** power
 		
-		let rounded = Math.round(float * scale) / scale
+		let rounded = Math.round(short * scale) / scale
 		floatView.setFloat32(0, rounded)
 		if (floatView.getFloat32(0) === short)
 			return rounded
@@ -268,7 +300,7 @@ for (let input of compound)
 	for (let subInput of inputs)
 	{
 		subInput.addEventListener("input", update)
-		subInput.addEventListener("dblclick", update)
+		modeChangeListenerMap.get(subInput).push(update)
 	}
 	characters.addEventListener("input", update)
 }
