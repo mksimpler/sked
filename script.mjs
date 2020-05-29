@@ -33,6 +33,23 @@ let getFloat = offset =>
 	return floatView.getFloat32(0)
 }
 
+let floorRound = n => 10**Math.floor(Math.log10(n))
+let step = value =>
+{
+	let n = value / 10
+	
+	let rounded = floorRound(n)
+	if (n / rounded < 5) return rounded
+	else return floorRound(n*2)/2
+}
+
+let updateStep = input => input.step = Math.max(0.01, step(input.valueAsNumber))
+let setValue = (input, value) =>
+{
+	input.valueAsNumber = value
+	updateStep(input)
+}
+
 let load = document.querySelector("#load")
 let main = document.querySelector("main > div")
 
@@ -84,7 +101,7 @@ let updateInput = (input, inputs, average, setCurrent) =>
 	if (average)
 	{
 		let value = offsets.map(offset => getFloat(offset)).reduce((a, b) => a + b, 0) / offsets.length
-		if (value === value) input.valueAsNumber = round(value)
+		if (value === value) setValue(input, round(value))
 		else input.value = ""
 		input.disabled = value < 0.05
 		setCurrent(value)
@@ -100,7 +117,7 @@ let updateInput = (input, inputs, average, setCurrent) =>
 				return
 			}
 		}
-		input.valueAsNumber = round(getFloat(offsets[0]))
+		setValue(input, round(getFloat(offsets[0])))
 	}
 }
 
@@ -136,6 +153,7 @@ for (let input of scales)
 	input.addEventListener("input", () =>
 	{
 		if (average.checked && input.valueAsNumber < 0.05) input.valueAsNumber = 0.05
+		updateStep(input)
 		reflect()
 	})
 	
@@ -276,6 +294,8 @@ for (let input of compound)
 		
 		if (average.checked && value < 0.05) value = input.valueAsNumber = 0.05
 		
+		updateStep(input)
+		
 		for (let subInput of inputs)
 		if (!subInput.matches(".free"))
 		{
@@ -283,11 +303,11 @@ for (let input of compound)
 			{
 				let current = subInput.valueAsNumber
 				if (current === current)
-					subInput.valueAsNumber = round(value / previous * current)
+					setValue(subInput, round(value / previous * current))
 			}
 			else
 			{
-				if (value === value) subInput.valueAsNumber = round(value)
+				if (value === value) setValue(subInput, round(value))
 				else subInput.value = ""
 			}
 		}
