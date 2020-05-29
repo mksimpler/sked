@@ -17,13 +17,14 @@ In order to try it out locally, it suffices to run a simple HTTP server from the
 git clone https://github.com/Zambonifofex/sked
 cd sked
 
-# Step 2: Start an HTTP server (Python’s in this example).
-python3 -m http.server 3000 &
-
-# Step 3: Open ‘http://localhost:3000’ in your browser.
-
-# Step 4 (Optional): Install ‘three.js’ through NPM to be able to see the 3D preview locally.
+# Step 2 (Optional): Install ‘three.js’ through NPM to be able to see the 3D preview locally.
 npm i
+mv node_modules modules
+
+# Step 3: Start an HTTP server (Python’s in this example).
+python3 -m http.server 3000
+
+# Step 4: Open ‘http://localhost:3000’ in your browser.
 ~~~
 
 **Note:** Pull requests and issue reports are very welcome!
