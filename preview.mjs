@@ -38,6 +38,17 @@ loader.load("model/SKRyounaUniform.pmx", char => { scene.add(char) ; char.positi
 
 let controls = new OrbitControls(camera, canvas)
 
+canvas.addEventListener("keypress", ({code}) =>
+{
+	switch (code)
+	{
+		case "KeyW": controls.target.y += 0.25 ; break
+		case "KeyS": controls.target.y -= 0.25 ; break
+		default: return
+	}
+	controls.update()
+})
+
 let frame
 
 let loop = () =>
