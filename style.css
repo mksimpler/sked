@@ -298,3 +298,17 @@ input:not([type="file"]):disabled
 	box-shadow: none;
 	pointer-events: none;
 }
+
+text { fill: #111D; }
+
+circle { r: 1px; fill: transparent; }
+
+header
+{
+	margin: 0 auto;
+	width: 24em;
+}
+
+svg { display: block; }
+
+header + h1 { margin-top: 0; }
