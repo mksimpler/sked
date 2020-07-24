@@ -12,6 +12,7 @@ mv \
 	model \
 	presets \
 	tutorial.html \
+	logo.mjs \
 	public
 
 mv node_modules public/modules
