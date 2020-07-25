@@ -17,7 +17,7 @@ for (let circle of document.querySelectorAll("circle"))
 	
 	let ch = () => (Math.random() * (0xFF - 0xBB) + 0xBB)
 	
-	let prev = [0, 0, 0]
+	let prev = "transparent"
 	let animate = () =>
 	{
 		let animation = circle.animate([{fill: prev}, {fill: prev = `rgb(${ch()}, ${ch()}, ${ch()})`}], {duration: Math.random() * 8000 + 4000, easing: `ease-in-out`})
