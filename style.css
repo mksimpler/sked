@@ -14,9 +14,7 @@ body, input, select, button
 body
 {
 	margin: 2em auto;
-	width: 32em;
-	min-width: 75%;
-	max-width: 100%;
+	width: min(max(32em, 75%), 92em, 100%);
 	background: #F8F8F8;
 	padding: 0 2em;
 }
@@ -25,14 +23,22 @@ main > div
 {
 	display: grid;
 	grid-template: auto auto / auto;
-	grid-gap: 0 1em;
+	grid-gap: 1em;
 	justify-items: start;
-	white-space: nowrap;
 }
 
 main > div > p { display: grid; }
-main > div > div p, fieldset p { text-align: right; }
 #canvas { justify-self: stretch; }
+
+main > div > div > * p
+{
+	display: grid;
+	grid-auto-flow: column;
+	gap: 0.5em;
+	margin-left: auto;
+	width: max-content;
+	align-items: baseline;
+}
 
 [data-offset] { width: 4em; }
 
@@ -46,17 +52,18 @@ fieldset
 
 main > div > div > div > p { margin-right: 1.0625em; }
 
-main > div > div { display: grid; grid-gap: 0.5em 1em; }
-
-@media (min-width: 1200px)
+main > div > div
 {
-	main > div > div
-	{
-		grid-template: auto / 1fr 1fr;
-	}
+	display: grid; grid-gap: 0.5em 1em;
+	grid-template: auto / repeat(auto-fit, minmax(max-content, 20em));
+	width: 100%;
 }
 
-@media (min-width: 800px) and (orientation: landscape)
+main > div > div > :last-child { margin-bottom: 0; }
+
+main > div > p { margin: 0; }
+
+@media (min-width: 800px)
 {
 	main > div
 	{
@@ -123,7 +130,7 @@ main > div > div { display: grid; grid-gap: 0.5em 1em; }
 	}
 }
 
-legend > input { width: 8em; }
+legend > input { width: auto; }
 
 #file, legend > input[type="checkbox"] { pointer-events: none; opacity: 0; position: absolute; width: 0; }
 
@@ -182,7 +189,15 @@ legend > .button:hover,
 input[type="checkbox"]:focus + label.button
 { box-shadow: #0003 0 0 0.5em; }
 
-legend { padding: 0em 0.5em; text-align: center; }
+legend
+{
+	padding: 0em 0.5em;
+	display: grid;
+	gap: 0.5em;
+	grid-template: auto / auto minmax(2em, 8em) auto;
+	align-items: baseline;
+	margin: 0 auto;
+}
 
 a
 {
@@ -279,11 +294,7 @@ canvas
 #preview > summary::-webkit-details-marker
 { display: none; }
 
-#preview
-{
-	grid-column: 1 / -1;
-	white-space: normal;
-}
+#preview { grid-column: 1 / -1; }
 
 input.free
 {
@@ -306,7 +317,7 @@ circle { r: 1px; fill: transparent; }
 header
 {
 	margin: 0 auto;
-	width: 24em;
+	max-width: 24em;
 }
 
 svg { display: block; }
