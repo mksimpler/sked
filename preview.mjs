@@ -72,7 +72,7 @@ resized()
 
 addEventListener("resize", resized)
 
-export let enable = () => frame = requestAnimationFrame(loop)
+export let enable = () => { resized() ; loop() }
 export let disable = () => cancelAnimationFrame(frame)
 
 let correspondences =
