@@ -5,8 +5,20 @@
 		<title>sked — body part scaling tool for Senran Kagura</title>
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="/style.css">
-		<script type="module" src="/script.mjs"></script>
-		<script type="module" src="/logo.mjs"></script>
+		<script type="importmap">
+		{
+			"imports":
+			{
+				"three": "https://ga.jspm.io/npm:three@0.132.2/build/three.module.js",
+				"three/examples/jsm/controls/OrbitControls.js": "https://ga.jspm.io/npm:three@0.132.2/examples/jsm/controls/OrbitControls.js",
+				"three/examples/jsm/loaders/DDSLoader.js": "https://ga.jspm.io/npm:three@0.132.2/examples/jsm/loaders/DDSLoader.js",
+				"three/examples/jsm/loaders/MMDLoader.js": "https://ga.jspm.io/npm:three@0.132.2/examples/jsm/loaders/MMDLoader.js"
+			},
+			"scopes": {"https://ga.jspm.io/npm:three@0.132.2/": {"three": "https://ga.jspm.io/npm:three@0.132.2/build/three.module.js"}}
+		}
+		</script>
+		<script type="module" src="/script.js"></script>
+		<script type="module" src="/logo.js"></script>
 	</head>
 	<body>
 		<header>
@@ -28,7 +40,7 @@
 		<p>This Web application facilitates modifying body part scaling for Senran Kagura games such as Shinovi Versus and Estival Versus.</p>
 		<p>To be able to use it, the first step is to either choose a preset or select the body scaling file from your computer (oftentimes named <samp>plbodyscl.bin</samp>). Then, a character can be selected for modification in the list below. Note that multiple characters can be selected for batch modification by dragging on the list or using <kbd>ctrl‐click</kbd> on desktop.</p>
 		<p>Once editing is done, the modified file can be saved to the filesystem by activating the “download” button.</p>
-		<p>For more information about how to use this tool, you may <a href="/tutorial">check the tutorial</a>.</p>
+		<p>For more information about how to use this tool, you may <a href="/tutorial.html">check the tutorial</a>.</p>
 		<h2>features and benefits</h2>
 		<ul>
 			<li>Plain standard HTML and JavaScript — Works on any modern browser.</li>
@@ -39,7 +51,7 @@
 			<li>3D preview — See your changes directly in a 3D model before even launching the game.</li>
 		</ul>
 		<h2>hacking</h2>
-		<p>This project is <a href="https://github.com/Zambonifofex/sked">available on GitHub</a>, and is distributed under the 0BSD license.</p>
+		<p>This project is <a href="https://github.com/zamfofex/sked">available on GitHub</a>, and is distributed under the 0BSD license.</p>
 		<p>Contributions and issue reports are welcome!</p>
 		<main>
 			<h2>modifying body part scaling</h2>
@@ -55,7 +67,7 @@
 					<p>Note: Currently, only the scaling of breasts, hips, and thighs are reflected on the preview. Blank values are displayed at their default scales.</p>
 					<p>Model ripped by <a href="https://deviantart.com/skeegie">Skeegie</a> and rendered using <a href="https://threejs.org">three.js</a>.</p>
 				</details>
-				<p id="canvas" hidden><canvas></canvas></p>
+				<p id="canvas" hidden><canvas tabindex="-1"></canvas></p>
 				<p>
 					<select multiple id="characters">
 						<optgroup label="Hanzo">
@@ -200,7 +212,7 @@
 			</div>
 		</main>
 		<footer>
-			<p><small>made by Zambonifofex〜</small></p>
+			<p><small>made by zamfofex</small></p>
 		</footer>
 	</body>
 </html>

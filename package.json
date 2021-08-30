@@ -1,8 +1,0 @@
-{
-	"dependencies": {
-		"three": "0.115.0"
-	},
-	"scripts": {
-		"build": "./build.bash"
-	}
-}

@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-
 set -e
 
+rm -rf public
 mkdir -p public
 
-mv \
+ln \
 	index.html \
 	style.css \
-	script.mjs \
-	preview.mjs \
-	model \
-	presets \
+	script.js \
+	preview.js \
 	tutorial.html \
-	logo.mjs \
+	logo.js \
 	public
 
-mv node_modules public/modules
+cp -r model presets public

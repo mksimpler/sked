@@ -336,7 +336,7 @@ if (details)
 	{
 		document.body.classList.toggle("preview", details.open)
 		canvas.hidden = !details.open
-		if (!preview) preview = await import("./preview.mjs")
+		if (!preview) preview = await import("./preview.js")
 		if (details.open) preview.enable()
 		else preview.disable()
 	})

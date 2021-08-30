@@ -8,11 +8,11 @@ import
 	LoadingManager,
 	AmbientLight,
 }
-from "./modules/three/build/three.module.js"
+from "three"
 
-import {OrbitControls} from "./modules/three/examples/jsm/controls/OrbitControls.js"
-import {MMDLoader} from "./modules/three/examples/jsm/loaders/MMDLoader.js"
-import {DDSLoader} from "./modules/three/examples/jsm/loaders/DDSLoader.js"
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
+import {MMDLoader} from "three/examples/jsm/loaders/MMDLoader.js"
+import {DDSLoader} from "three/examples/jsm/loaders/DDSLoader.js"
 
 let manager = new LoadingManager()
 manager.addHandler(/\.dds$/, new DDSLoader())
@@ -47,7 +47,7 @@ canvas.addEventListener("keypress", ({code}) =>
 		default: return
 	}
 	controls.update()
-})
+}, true)
 
 let frame
 
