@@ -8,11 +8,11 @@ import
 	LoadingManager,
 	AmbientLight,
 }
-from "three"
+from "./three/build/three.module.js"
 
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
-import {MMDLoader} from "three/examples/jsm/loaders/MMDLoader.js"
-import {DDSLoader} from "three/examples/jsm/loaders/DDSLoader.js"
+import {OrbitControls} from "./three/examples/jsm/controls/OrbitControls.js"
+import {MMDLoader} from "./three/examples/jsm/loaders/MMDLoader.js"
+import {DDSLoader} from "./three/examples/jsm/loaders/DDSLoader.js"
 
 let manager = new LoadingManager()
 manager.addHandler(/\.dds$/, new DDSLoader())
@@ -77,10 +77,23 @@ export let disable = () => cancelAnimationFrame(frame)
 
 let correspondences =
 {
-	"Left Chest": ["0E4", "0E8", "0EC"],
+	"Root": ["00C", "010", "014"], // body
+
+	"Left Chest": ["0E4", "0E8", "0EC"], // breast
 	"Right Chest": ["0CC", "0D0", "0D4"],
-	"Left Leg Twist": ["144", "148", "14C"],
+
+	"Left Forearm Twist": ["114", "118", "11C"], // elbows
+	"Right Forearm Twist": ["0FC", "100", "104"],
+
+	"Left Leg Twist": ["144", "148", "14C"], // thighs
 	"Right Leg Twist": ["12C", "130", "134"],
+
+	"Left Knee Twist": ["174", "178", "17C"], // knee
+	"Right Knee Twist": ["15C", "160", "164"],
+
+	"Head": ["0B4", "0B8", "0BC"],
+	"Neck": ["09C", "0A0", "0A4"],
+
 	"Hips": ["03C", "040", "044"],
 }
 
