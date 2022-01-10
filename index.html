@@ -3,9 +3,10 @@
 	<head>
 		<meta charset="utf-8">
 		<title>sked — body part scaling tool for Senran Kagura</title>
+		<base href=".">
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="/style.css">
-		<script type="importmap">
+		<!-- <script type="importmap">
 		{
 			"imports":
 			{
@@ -16,7 +17,7 @@
 			},
 			"scopes": {"https://ga.jspm.io/npm:three@0.132.2/": {"three": "https://ga.jspm.io/npm:three@0.132.2/build/three.module.js"}}
 		}
-		</script>
+		</script> -->
 		<script type="module" src="/script.js"></script>
 		<script type="module" src="/logo.js"></script>
 	</head>
@@ -63,7 +64,7 @@
 			</p>
 			<div hidden>
 				<details id="preview">
-					<summary><span class="button">3D preview</span> <small>(warning: Might not work on some devices.)</small></summary>
+					<summary><span class="button">3D preview</span></summary>
 					<p>Note: Currently, only the scaling of breasts, hips, and thighs are reflected on the preview. Blank values are displayed at their default scales.</p>
 					<p>Model ripped by <a href="https://deviantart.com/skeegie">Skeegie</a> and rendered using <a href="https://threejs.org">three.js</a>.</p>
 				</details>
@@ -98,9 +99,31 @@
 							<option value="1B44">Ryoubi</option>
 							<option value="1CC4">Ryouna</option>
 						</optgroup>
+						<optgroup label="Others">
+							<option value="1E44">Daidouji</option>
+							<option value="1FC4">Suzune/Rin</option>
+							<option value="2144">Unknown</option>
+							<option value="22C4">Ryoubi Shinobi</option>
+						</optgroup>
 					</select>
 				</p>
 				<div>
+					<fieldset>
+						<legend>body <input></legend>
+						<p>
+							<input data-offset="00C">
+							<input data-offset="010">
+							<input data-offset="014">
+						</p>
+					</fieldset>
+					<fieldset>
+						<legend>waist <input></legend>
+						<p>
+							<input data-offset="024">
+							<input data-offset="028">
+							<input data-offset="02C">
+						</p>
+					</fieldset>
 					<fieldset>
 						<legend>breasts <input></legend>
 						<p>
@@ -131,22 +154,22 @@
 							<input data-offset="134">
 						</p>
 					</fieldset>
-					<div>
-						<fieldset>
-							<legend>hips <input></legend>
-							<p>
-								<input data-offset="03C">
-								<input data-offset="040">
-								<input data-offset="044">
-							</p>
-						</fieldset>
-						<p>
-							thorax:
-							<input data-offset="084">
-							<input data-offset="088">
-							<input data-offset="08C">
-						</p>
-					</div>
+                    <fieldset>
+                        <legend>hips <input></legend>
+                        <p>
+                            <input data-offset="03C">
+                            <input data-offset="040" class="free">
+                            <input data-offset="044">
+                        </p>
+                    </fieldset>
+                    <fieldset>
+                        <legend>thorax <input></legend>
+                        <p>
+                            <input data-offset="084">
+                            <input data-offset="088">
+                            <input data-offset="08C">
+                        </p>
+                    </fieldset>
 					<fieldset>
 						<legend>head <input></legend>
 						<p>
